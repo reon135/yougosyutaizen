@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI用語大全</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* layout idea: 白か黒の地に、5色のステッカーと太い枠・ずらし影。動く見本を主役にした図鑑 */
+:root{
+  --bg:#ffffff; --surface:#f2f3f6; --ink:#0c0d12; --muted:#585e6c; --line:#dadde5;
+  --c1:#2b59ff; --c2:#ff4a3a; --c3:#ffc21a; --c4:#00a870; --c5:#8a4dff;
+  --accent:#2b59ff; --accent-ink:#ffffff; --warn:#a8530a; --muse:#00795c; --claude:#b8431a;
+  --code-bg:#0e1117; --code-ink:#e9ecf3;
+  --display:"Dela Gothic One","Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sh:5px 5px 0 var(--ink);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#08090c; --surface:#15171d; --ink:#f3f4f7; --muted:#a3a9b6; --line:#2b2e38;
+    --c1:#6f93ff; --c2:#ff6b5c; --c3:#ffd04d; --c4:#35d39b; --c5:#ad82ff;
+    --accent:#6f93ff; --accent-ink:#08090c; --warn:#f2b55c; --muse:#4fd6b0; --claude:#f59a70;
+    --code-bg:#000000; --code-ink:#e9ecf3; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#08090c; --surface:#15171d; --ink:#f3f4f7; --muted:#a3a9b6; --line:#2b2e38;
+  --c1:#6f93ff; --c2:#ff6b5c; --c3:#ffd04d; --c4:#35d39b; --c5:#ad82ff;
+  --accent:#6f93ff; --accent-ink:#08090c; --warn:#f2b55c; --muse:#4fd6b0; --claude:#f59a70;
+  --code-bg:#000000; --code-ink:#e9ecf3; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+html,body{overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.8;-webkit-text-size-adjust:100%}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--c1);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+h1,h2,h3{line-height:1.35;text-wrap:balance;margin:0}
+h1{font-family:var(--display);font-size:clamp(34px,7vw,68px);font-weight:400;line-height:1.15}
+h2{font-family:var(--display);font-size:clamp(22px,3.6vw,34px);font-weight:400}
+h3{font-size:18px;font-weight:900}
+p{margin:0}
+.lead{color:var(--muted);max-width:40em}
+section{padding:60px 0}
+.sec-head{display:grid;gap:10px;margin-bottom:28px}
+.stk{display:inline-block;font-family:var(--mono);font-size:12px;font-weight:700;padding:3px 10px;border:2px solid var(--ink);border-radius:999px;background:var(--c3);color:#0c0d12;transform:rotate(-2deg);justify-self:start}
+.stk.b{background:var(--c1);color:#fff}.stk.r{background:var(--c2);color:#fff}.stk.g{background:var(--c4);color:#fff}.stk.v{background:var(--c5);color:#fff}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ink);background:var(--bg);padding:8px 16px;border-radius:999px;font-weight:900;font-size:14px;text-decoration:none;color:var(--ink);box-shadow:3px 3px 0 var(--ink);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--ink)}
+.btn.pri{background:var(--c1);color:#fff}
+.btn.yl{background:var(--c3);color:#0c0d12}
+.btn.sm{padding:4px 12px;font-size:12.5px;box-shadow:2px 2px 0 var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+/* header */
+header.top{position:sticky;top:0;z-index:30;background:var(--bg);border-bottom:2px solid var(--ink)}
+.top .wrap{display:flex;align-items:center;gap:14px;height:54px}
+.logo{font-family:var(--display);font-size:16px;white-space:nowrap;text-decoration:none;color:var(--ink)}
+.top nav{display:flex;gap:2px;overflow-x:auto;flex:1;scrollbar-width:none}
+.top nav a{white-space:nowrap;font-size:13px;font-weight:700;color:var(--muted);text-decoration:none;padding:6px 9px;border-radius:6px}
+.top nav a:hover{color:var(--ink);background:var(--surface)}
+.theme{border:2px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:4px 12px;font-size:12.5px;font-weight:900;white-space:nowrap}
+/* hero */
+.hero{padding:40px 0 30px;position:relative}
+.hero-grid{display:grid;gap:26px;grid-template-columns:1.05fr .95fr;align-items:center}
+.hero h1 em{font-style:normal;background:var(--c3);color:#0c0d12;padding:0 .12em;border-radius:.12em;display:inline-block;transform:rotate(-1.5deg)}
+.hero p.sub{font-size:18px;font-weight:700;margin-top:16px;max-width:25em}
+.hero .cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.heroCv{width:100%;aspect-ratio:4/3;display:block;border:2px solid var(--ink);border-radius:20px;box-shadow:var(--sh);background:var(--surface)}
+.mq{border-block:2px solid var(--ink);background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;padding:8px 0;font-family:var(--display);font-size:15px}
+.mq div{display:inline-block;animation:mq 40s linear infinite;padding-left:0}
+.mq span{margin:0 18px}.mq span::before{content:"▶";margin-right:10px;color:var(--c3);font-size:11px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.cpy{margin-top:22px;border:2px solid var(--ink);border-radius:14px;padding:14px 18px;background:var(--bg);font-size:16px;line-height:1.8;display:grid;gap:2px}.cpy a{font-weight:900}
+/* term tooltip */
+.term{border-bottom:2px dotted var(--c1);cursor:help;position:relative;font-weight:700}
+.term::after{content:attr(data-tip);position:absolute;left:0;top:calc(100% + 8px);z-index:20;width:min(280px,70vw);background:var(--ink);color:var(--bg);font-size:13px;font-weight:500;line-height:1.6;padding:10px 12px;border-radius:10px;opacity:0;visibility:hidden;transition:opacity .15s;pointer-events:none}
+.term:hover::after,.term:focus::after{opacity:1;visibility:visible}
+.g2{display:grid;gap:20px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{display:grid;gap:20px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.box{border:2px solid var(--ink);border-radius:16px;padding:18px;display:grid;gap:10px;align-content:start;background:var(--bg)}
+.box.sh{box-shadow:var(--sh)}
+.box.fill{background:var(--surface)}
+.tag{display:inline-block;font-size:11.5px;font-weight:900;border-radius:999px;padding:1px 9px;border:2px solid currentColor;line-height:1.7;white-space:nowrap}
+.tag.muse{color:var(--muse)} .tag.claude{color:var(--claude)}
+.say{position:relative;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.65;font-weight:500}
+.say::before{content:"";position:absolute;left:22px;top:-7px;width:14px;height:14px;background:var(--ink);transform:rotate(45deg)}
+.caution{border-left:5px solid var(--c3);background:var(--surface);padding:12px 14px;border-radius:0 10px 10px 0;font-size:14px}
+.caution b{color:var(--warn)}
+.small{font-size:13px;color:var(--muted)}
+/* word table */
+.ana{border:2px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:var(--sh)}
+.ana .row{display:grid;grid-template-columns:170px 1fr 1.3fr;border-top:1px solid var(--line)}
+.ana .row:first-child{border-top:0;background:var(--ink);color:var(--bg);font-weight:700;font-size:13px}
+.ana .row>div{padding:12px 14px;font-size:14.5px;line-height:1.6}
+.ana .row>div:first-child{font-weight:900}
+.ana .dot{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:8px;border:2px solid var(--ink);vertical-align:-1px}
+/* prompt compare */
+.pc{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:center}
+.pbx{border:2px solid var(--ink);border-radius:12px;padding:12px;font-size:12.5px;line-height:1.7;background:var(--surface);position:relative}
+.pbx b.h{position:absolute;top:-11px;left:10px;background:var(--ink);color:var(--bg);font-size:11px;padding:0 8px;border-radius:999px}
+.pbx.s{background:var(--c3);color:#0c0d12;font-weight:900;font-size:14px}
+.pc .ar{font-family:var(--display);font-size:20px}
+/* repo mock */
+.win{border:2px solid var(--ink);border-radius:12px;overflow:hidden;background:var(--bg);font-size:13px;line-height:1.5}
+.win .bar{display:flex;gap:8px;align-items:center;padding:7px 10px;background:var(--surface);border-bottom:2px solid var(--ink)}
+.win .dots{display:flex;gap:5px}.win .dots i{width:10px;height:10px;border-radius:50%;background:var(--c2)}.win .dots i:nth-child(2){background:var(--c3)}.win .dots i:nth-child(3){background:var(--c4)}
+.win .url{flex:1;background:var(--bg);border:1.5px solid var(--line);border-radius:6px;padding:2px 9px;font-family:var(--mono);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.repo{padding:12px;display:grid;gap:10px}
+.repo .rh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.repo .nm{font-weight:700;font-family:var(--mono);font-size:13px}
+.repo .star{border:1.5px solid var(--line);border-radius:6px;padding:1px 8px;font-size:12px}
+.repo .codeb{background:var(--c4);color:#fff;border-radius:6px;padding:2px 10px;font-weight:700;font-size:12px}
+.repo .files{border:1.5px solid var(--line);border-radius:8px}
+.repo .files div{padding:5px 10px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;gap:8px}
+.repo .files div:first-child{border-top:0}
+.repo .files span{color:var(--muted);font-family:var(--body)}
+.repo .readme{border:1.5px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:6px}
+.repo .cmd{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:12px;padding:6px 10px;border-radius:6px;overflow-x:auto;white-space:nowrap}
+.pin{display:inline-grid;place-items:center;width:21px;height:21px;border-radius:50%;background:var(--c2);color:#fff;font-family:var(--mono);font-size:11.5px;font-weight:700;flex:none;vertical-align:middle}
+.pins{display:grid;gap:9px;margin:0;padding:0;list-style:none}
+.pins li{display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14.5px;line-height:1.6}
+.hl{outline:3px solid var(--c1);outline-offset:2px;border-radius:6px}
+.tree{font-family:var(--mono);font-size:13px;display:grid;gap:8px}
+.tree .f{display:grid;grid-template-columns:150px 1fr;gap:10px;align-items:center}
+.tree .f span{font-family:var(--body);font-size:13.5px;background:var(--surface);padding:4px 10px;border-radius:8px}
+/* compare */
+.cmp{display:grid;gap:18px;grid-template-columns:1fr 1fr}
+.cvw{position:relative}
+.cvw canvas{width:100%;aspect-ratio:16/9;display:block;border:2px solid var(--ink);border-radius:14px}
+.cvw .lab{position:absolute;left:10px;top:-12px;font-size:12px;font-weight:900;background:var(--ink);color:var(--bg);padding:1px 12px;border-radius:999px;z-index:3}
+.cvw.on canvas{box-shadow:var(--sh)}.cvw.on .lab{background:var(--c2);color:#fff}
+.tgl{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{border:2px solid var(--ink);background:var(--bg);border-radius:999px;padding:4px 13px;font-size:13px;font-weight:900}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+table.t{width:100%;border-collapse:collapse;font-size:14.5px}
+table.t th,table.t td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top;line-height:1.6}
+table.t th{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.scroll{overflow-x:auto}
+.big{font-family:var(--display);font-size:44px;line-height:1.05;font-variant-numeric:tabular-nums}
+.big small{font-size:16px;font-family:var(--mono)}
+/* demo */
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.tab{border:2px solid var(--ink);background:var(--bg);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:900;text-align:left;line-height:1.4;box-shadow:3px 3px 0 var(--ink);display:grid;gap:2px}
+.tab small{font-weight:500;color:var(--muted);font-size:11.5px}
+.tab i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--c1)}
+.tab[aria-selected="true"]{background:var(--c3);color:#0c0d12;transform:translate(3px,3px);box-shadow:none}
+.tab[aria-selected="true"] small,.tab[aria-selected="true"] i{color:#0c0d12}
+.demo{display:grid;grid-template-columns:.8fr 1.2fr;gap:20px;align-items:start}
+.steps{margin:0;padding:0;list-style:none;display:grid;gap:8px}
+.steps button{width:100%;text-align:left;border:2px solid var(--line);background:var(--bg);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:30px 1fr;gap:10px;align-items:start;font-size:14.5px;line-height:1.55;font-weight:700}
+.steps .no{font-family:var(--display);font-size:15px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--ink);background:var(--bg)}
+.steps .tp{display:none;font-weight:500;font-size:13px;color:var(--muted);margin-top:4px}
+.steps li.done .no{background:var(--c4);color:#fff}
+.steps li.on button{border-color:var(--ink);box-shadow:var(--sh);background:var(--surface)}
+.steps li.on .no{background:var(--c2);color:#fff}
+.steps li.on .tp{display:block}
+.player{border:2px solid var(--ink);border-radius:16px;overflow:hidden;box-shadow:var(--sh);background:var(--surface)}
+.pbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px 12px;border-bottom:2px solid var(--ink);background:var(--bg)}
+.pbar .stepno{font-family:var(--mono);font-weight:700;font-size:12.5px;margin-left:auto}
+.capt{padding:10px 14px;font-size:16px;font-weight:900;line-height:1.5;background:var(--ink);color:var(--bg);min-height:3.3em;display:flex;align-items:center;gap:10px}
+.capt b{font-family:var(--display);font-weight:400;background:var(--c3);color:#0c0d12;border-radius:50%;width:28px;height:28px;display:grid;place-items:center;flex:none;font-size:14px}
+.stage{position:relative;padding:14px;min-height:352px;overflow:hidden}
+.scr{display:none}.scr.on{display:block}
+.termw{background:var(--code-bg);color:var(--code-ink);font-family:var(--mono);font-size:12.5px;line-height:1.75;padding:12px 14px;min-height:280px;white-space:pre-wrap;word-break:break-all}
+.termw .p{color:#7ee0a8}.termw .o{color:#9aa3b5}
+.caret::after{content:"▍";animation:bl 1s steps(1) infinite}
+@keyframes bl{50%{opacity:0}}
+.chat{padding:12px;display:grid;gap:10px;min-height:236px;align-content:end}
+.msg{max-width:88%;padding:8px 12px;border-radius:14px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg.u{justify-self:end;background:var(--c1);color:#fff;border-bottom-right-radius:4px}
+.msg.a{justify-self:start;background:var(--surface);border:1.5px solid var(--line);border-bottom-left-radius:4px}
+.inp{border:2px solid var(--ink);border-radius:12px;padding:8px 12px;min-height:40px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-all;background:var(--bg)}
+.inp:empty::before{content:"メッセージを入力";color:var(--muted)}
+.vcard{margin-top:6px;width:170px;aspect-ratio:16/9;border-radius:8px;background:linear-gradient(135deg,var(--c1),var(--c5));position:relative;overflow:hidden;display:grid;place-items:center}
+.vcard::before{content:"";width:0;height:0;border-left:16px solid #fff;border-top:10px solid transparent;border-bottom:10px solid transparent}
+.vcard::after{content:"video.mp4";position:absolute;left:6px;bottom:4px;font-family:var(--mono);font-size:10px;color:#fff}
+.setw{display:grid;grid-template-columns:120px 1fr;min-height:280px}
+.setw .side{border-right:1.5px solid var(--line);padding:10px;display:grid;gap:6px;align-content:start;font-size:12.5px}
+.setw .side div{padding:4px 8px;border-radius:6px}
+.setw .main{padding:12px;display:grid;gap:10px;align-content:start}
+.setw .plus{justify-self:end;border:2px solid var(--ink);border-radius:8px;width:30px;height:28px;display:grid;place-items:center;font-weight:700}
+.setw .menu{justify-self:end;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);font-size:12.5px;display:none}
+.setw .menu div{padding:6px 12px}
+.setw .dz{border:2px dashed var(--line);border-radius:10px;padding:16px;text-align:center;font-size:12.5px;color:var(--muted);display:none}
+.setw .lst{border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;display:none;justify-content:space-between;align-items:center;font-size:13px;font-weight:700}
+.setw .sw{width:34px;height:18px;border-radius:9px;background:var(--c4);position:relative}.setw .sw::after{content:"";position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff}
+.cursor{position:absolute;left:0;top:0;width:24px;height:24px;z-index:10;pointer-events:none;transition:transform .7s cubic-bezier(.3,.8,.2,1);transform:translate(40px,40px)}
+.cursor::before{content:"";position:absolute;inset:0;background:var(--c2);clip-path:polygon(0 0,0 78%,24% 58%,42% 100%,58% 92%,40% 52%,72% 52%)}
+.cursor.click::after{content:"";position:absolute;left:-12px;top:-12px;width:30px;height:30px;border-radius:50%;border:3px solid var(--c2);animation:ck .6s ease-out}
+@keyframes ck{from{transform:scale(.3);opacity:1}to{transform:scale(1.5);opacity:0}}
+.ptip{padding:10px 14px;font-size:13.5px;border-top:2px solid var(--ink);background:var(--bg);line-height:1.6}
+.ptip b{color:var(--c1)}
+/* cards */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.cards{display:grid;gap:26px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{--k:var(--c1);border:2px solid var(--ink);border-radius:20px;display:grid;align-content:start;background:var(--bg);scroll-margin-top:70px;box-shadow:var(--sh);overflow:hidden;transition:transform .15s}
+.card:hover{transform:translate(-2px,-2px)}
+.card[data-cat="motion"]{--k:var(--c2)}.card[data-cat="look"]{--k:var(--c5)}.card[data-cat="auto"]{--k:var(--c4)}.card[data-cat="idea"]{--k:var(--c3)}.card[data-cat="parts"]{--k:var(--muted)}
+.card.flash{outline:5px solid var(--c3)}
+.card .hd{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:12px 16px;border-bottom:2px solid var(--ink);background:var(--surface)}
+.rank{font-family:var(--display);font-size:30px;line-height:1;background:var(--k);color:#fff;border:2px solid var(--ink);border-radius:12px;padding:8px 10px;min-width:56px;text-align:center;transform:rotate(-4deg)}
+.rank small{font-size:12px;display:block;font-family:var(--body);font-weight:900}
+.rank.tx{font-size:15px;padding:12px 8px}
+.card h3{font-size:19px;line-height:1.3}
+.card .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px}
+.catp{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;background:var(--k);color:#fff;border:2px solid var(--ink);line-height:1.7}
+.pvc{width:100%;aspect-ratio:16/9;display:block;border-bottom:2px solid var(--ink);background:var(--surface)}
+.card .bd{padding:16px;display:grid;gap:13px}
+.card .one{font-family:var(--display);font-size:19px;line-height:1.45}
+.card .desc{font-size:14.5px;line-height:1.75}
+.card ul{margin:0;padding-left:1.2em;font-size:14.5px;line-height:1.7}
+.pow{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.pow li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:14.5px;line-height:1.6;font-weight:700}
+.pow li::before{content:"";width:18px;height:18px;border-radius:50%;background:var(--k);border:2px solid var(--ink);margin-top:3px}
+.facts{display:flex;gap:6px;flex-wrap:wrap}
+.facts span{font-size:12px;background:var(--surface);border-radius:6px;padding:2px 8px;font-weight:700}
+.easy{border:2px solid var(--ink);border-radius:14px;overflow:hidden}
+.easy .eh{background:var(--c3);color:#0c0d12;font-weight:900;font-size:13px;padding:5px 12px;border-bottom:2px solid var(--ink)}
+.easy .eb{padding:10px 12px;display:grid;gap:8px;background:var(--bg)}
+.easy .txt{font-size:13.5px;line-height:1.65;white-space:pre-wrap;word-break:break-all;font-family:var(--mono);background:var(--surface);border-radius:8px;padding:8px 10px}
+.easy .ea{display:flex;gap:8px;flex-wrap:wrap}
+.mini{border-top:2px dashed var(--line);padding-top:10px;display:none;gap:8px}
+.mini.on{display:grid}
+.mini .mw{border:2px solid var(--ink);border-radius:12px;overflow:hidden}
+.mini .mt{font-size:11.5px;font-weight:900;padding:4px 10px;background:var(--surface);border-bottom:2px solid var(--ink)}
+.mini .ml{padding:10px;display:grid;gap:8px;min-height:96px;align-content:end}
+.mini .mi{padding:0 10px 10px}
+.mini .ms{font-size:12.5px;font-weight:900;color:var(--c1)}
+.cmdrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--code-bg);border-radius:10px;padding:8px 8px 8px 12px}
+.cmdrow code{font-family:var(--mono);font-size:12.5px;color:var(--code-ink);overflow-x:auto;white-space:pre;display:block;line-height:1.7}
+.cmdrow .btn{background:var(--code-ink);color:var(--code-bg);border-color:var(--code-ink);box-shadow:none}
+.lbl{font-size:12px;font-weight:900;color:var(--muted);margin-bottom:3px}
+.prm{background:var(--surface);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.7;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}
+details summary{cursor:pointer;font-weight:900;font-size:14px}
+details .in{display:grid;gap:10px;margin-top:10px}
+.card .ft{display:flex;gap:10px;flex-wrap:wrap}
+/* picker / builder */
+.q{display:grid;gap:8px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.res{border:2px solid var(--ink);border-radius:16px;padding:16px;display:grid;gap:10px;background:var(--c3);color:#0c0d12;box-shadow:var(--sh)}
+.res a{color:#0c0d12}.res .small{color:#3a3f4a}
+.res ol{margin:0;padding-left:1.3em;display:grid;gap:4px}
+.res .caution{background:#fff;color:#0c0d12}
+.form{display:grid;gap:12px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.form label{display:grid;gap:4px;font-size:13px;font-weight:900}
+.form select,.form input[type=text]{font:inherit;padding:8px 10px;border:2px solid var(--ink);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+.form .wide{grid-column:1/-1}
+.out{background:var(--code-bg);color:var(--code-ink);border-radius:14px;padding:14px;font-size:14px;line-height:1.8;white-space:pre-wrap;border:2px solid var(--ink)}
+.todo{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.todo label{display:grid;grid-template-columns:24px 1fr;gap:10px;align-items:start;border:2px solid var(--line);border-radius:12px;padding:10px 12px;font-size:15px;line-height:1.6;cursor:pointer}
+.todo input{width:20px;height:20px;margin-top:3px;accent-color:var(--c4)}
+.todo input:checked+span{color:var(--muted);text-decoration:line-through}
+.prog{height:12px;border-radius:6px;border:2px solid var(--ink);overflow:hidden}.prog i{display:block;height:100%;background:var(--c4);width:0;transition:width .3s}
+.faq details{border-bottom:1px solid var(--line);padding:12px 0}
+.faq details p{margin-top:8px;color:var(--muted);font-size:15px;max-width:44em}
+footer{padding:36px 0 60px;border-top:2px solid var(--ink);font-size:13px;color:var(--muted)}
+footer ul{margin:8px 0 0;padding-left:1.2em;display:grid;gap:2px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--c4);color:#fff;border:2px solid var(--ink);padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:900;opacity:0;transition:.25s;z-index:70;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%)}
+@media (max-width:860px){
+  .hero-grid,.g2,.g3,.cmp,.demo,.cards,.form{grid-template-columns:1fr}
+  .tabs{grid-template-columns:1fr 1fr}
+  .demo .player{order:-1}
+  .ana .row{grid-template-columns:96px 1fr 1.2fr}.ana .row>div{padding:9px;font-size:13px}
+  .pc{grid-template-columns:1fr}.pc .ar{transform:rotate(90deg);justify-self:center}
+  section{padding:46px 0}
+  .setw{grid-template-columns:86px 1fr}
+  .tree .f{grid-template-columns:1fr}
+  .term{position:static}
+  .term::after{position:fixed;left:16px;right:16px;top:auto;bottom:16px;width:auto;z-index:60}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+.card[data-cat="video"]{--k:var(--c2)}.card[data-cat="design"]{--k:var(--c5)}.card[data-cat="sns"]{--k:var(--c1)}.card[data-cat="sell"]{--k:var(--c4)}.card[data-cat="list"]{--k:var(--c3)}.card[data-cat="site"]{--k:var(--c1)}.card[data-cat="ops"]{--k:var(--c4)}.card[data-cat="research"]{--k:var(--c5)}.card[data-cat="ai"]{--k:var(--muted)}
+.ico{font-family:var(--display);font-size:22px;line-height:1;background:var(--k);color:#fff;border:2px solid var(--ink);border-radius:14px;width:52px;height:52px;display:grid;place-items:center;transform:rotate(-4deg)}
+.card[data-cat="list"] .ico,.card[data-cat="list"] .catp{color:#0c0d12}
+.hot{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;background:var(--c2);color:#fff;border:2px solid var(--ink);line-height:1.7}
+.howp{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px solid var(--ink);line-height:1.7;background:var(--bg)}
+.urlrow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;background:var(--code-bg);border-radius:10px;padding:8px 8px 8px 12px}
+.urlrow code{font-family:var(--mono);font-size:12.5px;color:var(--code-ink);overflow-x:auto;white-space:pre;display:block;line-height:1.7}
+.urlrow .btn{background:var(--code-ink);color:var(--code-bg);border-color:var(--code-ink);box-shadow:none}
+.exs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+.exs b{font-size:13px}
+.tabs.t3{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* claude settings mock */
+.cs{display:grid;grid-template-columns:128px 1fr;min-height:300px;position:relative}
+.cs .side{border-right:1.5px solid var(--line);padding:10px;display:grid;gap:4px;align-content:start;font-size:12.5px;background:var(--surface)}
+.cs .side div{padding:4px 8px;border-radius:6px}
+.cs .side .act{background:var(--bg);font-weight:900;border:1.5px solid var(--line)}
+.cs .main{padding:12px;display:grid;gap:10px;align-content:start;position:relative}
+.cs .mh{display:flex;justify-content:space-between;align-items:center}
+.cs .mh b{font-size:15px}
+.cbtn{border:2px solid var(--ink);border-radius:8px;padding:2px 10px;font-size:12px;font-weight:900;background:var(--bg)}
+.cmenu{position:absolute;right:12px;top:42px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);font-size:12.5px;display:none;z-index:3;box-shadow:0 8px 24px rgba(0,0,0,.18);overflow:hidden}
+.cmenu div{padding:7px 14px}.cmenu div+div{border-top:1px solid var(--line)}
+.csearch{border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12.5px;min-height:30px;background:var(--bg)}
+.csearch:empty::before{content:"コネクタを検索";color:var(--muted)}
+.clist{display:grid;gap:8px}
+.crow{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:10px;padding:8px 10px;background:var(--bg)}
+.crow .ci{width:32px;height:32px;border-radius:8px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:14px;background:var(--c1)}
+.crow .cn{font-weight:900;font-size:13px;line-height:1.3}.crow .cd{font-size:11.5px;color:var(--muted);line-height:1.4}
+.crow .cb{border:2px solid var(--ink);border-radius:999px;padding:1px 12px;font-size:12px;font-weight:900;background:var(--ink);color:var(--bg);white-space:nowrap}
+.crow .cb.ok{background:var(--c4);color:#fff;border-color:var(--c4)}
+.cmodal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:none;place-items:center;z-index:4;padding:14px}
+.cmodal .mb{background:var(--bg);border:2px solid var(--ink);border-radius:14px;padding:14px;width:min(360px,100%);display:grid;gap:8px}
+.cmodal label{font-size:11.5px;font-weight:900;color:var(--muted)}
+.cmodal .fi{border:1.5px solid var(--line);border-radius:8px;padding:5px 10px;font-size:12px;min-height:30px;font-family:var(--mono);word-break:break-all}
+.cmodal .ma{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+.cmodal .ma span{border:2px solid var(--ink);border-radius:999px;padding:1px 14px;font-size:12px;font-weight:900}
+.cmodal .ma .go{background:var(--ink);color:var(--bg)}
+.auth{min-height:300px;display:grid;place-items:center;padding:18px;background:var(--surface)}
+.auth .ab{background:var(--bg);border:2px solid var(--ink);border-radius:16px;padding:18px;width:min(340px,100%);display:grid;gap:10px;text-align:center}
+.auth .ai{display:flex;justify-content:center;gap:10px;align-items:center;font-family:var(--mono);color:var(--muted)}
+.auth .ai i{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;color:#fff;font-style:normal;font-weight:900;background:var(--c1);font-family:var(--body)}
+.auth .ai i.cl{background:var(--claude)}
+.auth ul{margin:0;padding:0;list-style:none;font-size:12.5px;text-align:left;display:grid;gap:4px}
+.auth li::before{content:"✓ ";color:var(--c4);font-weight:900}
+.auth .aa{display:flex;gap:8px;justify-content:center}
+.auth .aa span{border:2px solid var(--ink);border-radius:999px;padding:3px 16px;font-size:12.5px;font-weight:900}
+.auth .aa .go{background:var(--c4);color:#fff}
+.chatw{position:relative}
+.irow{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:end;padding:0 12px 12px}
+.pplus{border:2px solid var(--ink);border-radius:10px;width:36px;height:40px;display:grid;place-items:center;font-weight:900;background:var(--bg)}
+.ppop{position:absolute;left:12px;bottom:60px;border:2px solid var(--ink);border-radius:12px;background:var(--bg);padding:8px 10px;font-size:12.5px;display:none;z-index:3;min-width:210px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.ppop b{display:block;font-size:11px;color:var(--muted);margin-bottom:4px}
+.ppop .pr{display:flex;justify-content:space-between;align-items:center;gap:12px;font-weight:900;padding:3px 0}
+.ppop .sw{width:34px;height:18px;border-radius:9px;background:var(--c4);position:relative;flex:none}.ppop .sw::after{content:"";position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff}
+.rcard{margin-top:6px;width:190px;border-radius:8px;border:2px solid var(--ink);overflow:hidden;background:var(--bg)}
+.rcard .rt{aspect-ratio:16/9;background:linear-gradient(135deg,var(--c1),var(--c5));display:grid;place-items:center;color:#fff;font-weight:900;font-size:12px}
+.rcard .rb{padding:4px 8px;font-size:11px;font-family:var(--mono)}
+/* recipes */
+.rcp{display:grid;gap:22px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.chain{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chain a{border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:13px;font-weight:900;text-decoration:none;color:var(--ink);background:var(--bg);animation:pls 4s ease-in-out infinite}
+.chain a:nth-of-type(2){animation-delay:.8s}.chain a:nth-of-type(3){animation-delay:1.6s}.chain a:nth-of-type(4){animation-delay:2.4s}
+.chain i{font-style:normal;font-family:var(--display)}
+@keyframes pls{0%,20%,100%{background:var(--bg);color:var(--ink)}8%{background:var(--c3);color:#0c0d12}}
+.flow5{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:8px;align-items:stretch;margin-top:8px}
+.flow5 .n{border:2px solid var(--ink);border-radius:12px;padding:12px 8px;text-align:center;font-weight:900;font-size:13.5px;line-height:1.5;background:var(--bg);display:grid;place-items:center}
+.flow5 .n small{display:block;font-weight:500;color:var(--muted);font-size:11.5px}
+.flow5 .n.k{background:var(--c3);color:#0c0d12}.flow5 .n.k small{color:#3a3f4a}
+.flow5 .ar{display:grid;place-items:center;font-family:var(--display)}
+@media (max-width:860px){.rcp{grid-template-columns:1fr}.tabs.t3{grid-template-columns:1fr}.cs{grid-template-columns:92px 1fr}.flow5{grid-template-columns:1fr}.flow5 .ar{transform:rotate(90deg)}}
+.gl{display:grid;gap:16px}
+.glc{border:2px solid var(--ink);border-radius:16px;overflow:hidden;background:var(--bg);box-shadow:var(--sh)}
+.glh{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline;padding:10px 16px;border-bottom:2px solid var(--ink);background:var(--surface)}
+.glh b{font-family:var(--display);font-weight:400;font-size:20px;border-left:10px solid var(--k);padding-left:10px}
+.glh span{font-weight:700;font-size:14.5px}
+.glb{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:0}
+.glb>div{padding:12px 16px;border-left:1px solid var(--line)}.glb>div:first-child{border-left:0}
+.glb i{font-style:normal;font-size:11.5px;font-weight:900;color:var(--muted);display:block;margin-bottom:2px}
+.glb p{font-size:14.5px;line-height:1.75}
+.glb code{font-family:var(--mono);font-size:12px;background:var(--surface);padding:1px 5px;border-radius:4px;word-break:break-all}
+.pbtn{text-align:left;cursor:pointer;font:inherit;color:inherit;width:100%;transition:transform .12s}
+.pbtn:hover{transform:translate(-2px,-2px)}
+.pbtn .more{display:inline-block;margin-top:4px;font-size:13px;font-weight:900;background:var(--c2);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:2px 12px;justify-self:start}
+.pricep{margin-top:26px;border:2px solid var(--ink);border-radius:20px;padding:22px;background:var(--bg);box-shadow:var(--sh)}
+.pricep h3{font-size:19px}
+.sim{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:10px;align-items:start}
+.simf{display:grid;grid-template-columns:1fr 1fr;gap:10px;border:2px solid var(--ink);border-radius:14px;padding:14px;background:var(--surface)}
+.simf label{display:grid;gap:3px;font-size:12.5px;font-weight:900}
+.simf select,.simf input{font:inherit;font-weight:500;padding:7px 8px;border:2px solid var(--ink);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;font-size:13.5px}
+.simp{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;align-items:center}.simp b{font-size:12.5px;margin-right:4px}
+.simo{border:2px solid var(--ink);border-radius:14px;padding:14px;background:var(--bg);position:sticky;top:66px}
+.simt{display:grid;gap:0;background:var(--c3);color:#0c0d12;border:2px solid var(--ink);border-radius:12px;padding:10px 14px}
+.simt span{font-size:12.5px;font-weight:900}.simt b{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.2;font-variant-numeric:tabular-nums}.simt i{font-style:normal;font-size:12px}
+.simr,.simn{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:4px;font-size:13.5px}
+.simr li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:3px}
+.simn li::before{content:"▶ ";color:var(--c1)}
+.sum{border:2px solid var(--ink);border-radius:16px;padding:16px 18px;background:var(--surface);display:grid;gap:6px;margin-top:22px}
+.sum ol{margin:0;padding-left:1.3em;font-size:15px;font-weight:700;display:grid;gap:2px}
+.totop{position:fixed;right:16px;bottom:16px;z-index:40;border:2px solid var(--ink);background:var(--c3);color:#0c0d12;border-radius:999px;width:46px;height:46px;font-weight:900;font-size:18px;box-shadow:3px 3px 0 var(--ink)}
+.costp{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px dashed var(--ink);line-height:1.7;background:var(--bg)}
+.lv{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;line-height:1.7;color:#fff;border:2px solid var(--ink)}
+.lv.e1{background:var(--c4)}.lv.e2{background:var(--c1)}.lv.e3{background:var(--c5)}
+@media (max-width:860px){.glb{grid-template-columns:1fr}.glb>div{border-left:0;border-top:1px solid var(--line)}.glb>div:first-child{border-top:0}.sim,.simf{grid-template-columns:1fr}.simo{position:static}.pricep{padding:16px}}
+.cpy{margin-top:22px;border:2px solid var(--ink);border-radius:14px;padding:14px 18px;background:var(--bg);font-size:16px;line-height:1.8;display:grid;gap:2px}.cpy a{font-weight:900}
+:root{--c6:#e0408a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c6:#ff7ab8}}
+:root[data-theme="dark"]{--c6:#ff7ab8}
+.card[data-t="doc"]{--k:var(--c1)}.card[data-t="slides"]{--k:var(--c3)}.card[data-t="sheet"]{--k:var(--c4)}.card[data-t="design"]{--k:var(--c5)}.card[data-t="data"]{--k:var(--c2)}.card[data-t="board"]{--k:var(--c6)}
+.card[data-t="slides"] .ico{color:#0c0d12}
+.ico{font-family:var(--display);font-size:20px;line-height:1;background:var(--k);color:#fff;border:2px solid var(--ink);border-radius:14px;width:52px;height:52px;display:grid;place-items:center;transform:rotate(-4deg)}
+.planp{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px solid var(--ink);line-height:1.7;background:var(--c4);color:#fff}
+.planp.paid{background:var(--c1)}
+.betap{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px solid var(--ink);line-height:1.7;background:var(--ink);color:var(--bg)}
+.fmts{display:flex;flex-wrap:wrap;gap:6px}.fmts span{font-size:12px;font-weight:900;border:2px dashed var(--ink);border-radius:8px;padding:1px 8px}
+.uses{display:flex;flex-wrap:wrap;gap:6px}.uses span{font-size:12.5px;font-weight:700;background:var(--surface);border-radius:999px;padding:2px 10px}
+.exs{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}.exs b{font-size:13px}
+.tabs.t3{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* home mock */
+.hm{display:grid;grid-template-columns:120px 1fr;min-height:300px}
+.hm .side{border-right:1.5px solid var(--line);padding:10px;display:grid;gap:4px;align-content:start;font-size:12.5px;background:var(--surface)}
+.hm .side div{padding:4px 6px;border-radius:6px;white-space:nowrap;font-size:11.5px}.hm .side .act{background:var(--bg);font-weight:900;border:1.5px solid var(--line)}
+.hm .main{padding:12px;display:grid;gap:10px;align-content:start}
+.hm .lb{font-size:11.5px;font-weight:900;color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.tile{white-space:nowrap;border-radius:10px;padding:8px 4px 6px;display:grid;gap:4px;justify-items:center;font-size:10.5px;font-weight:900;color:#fff;position:relative;border:2px solid transparent}
+.tile i{width:22px;height:22px;border:2.5px solid #fff;border-radius:5px;display:block}
+.tile.sl i{border-radius:3px;height:16px}.tile.dg i{border-radius:50%}.tile.dt i{border-width:0 2.5px 2.5px 2.5px;border-radius:0}.tile.bd i{border-radius:50% 5px 5px 5px}
+.tile em{position:absolute;left:3px;top:2px;font-style:normal;font-size:8px;background:rgba(0,0,0,.45);border-radius:999px;padding:0 5px}
+.tile.sel{border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.alist{display:grid;gap:6px}
+.arow{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;border:1.5px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;font-weight:700}
+.arow i{width:24px;height:24px;border-radius:6px;display:block}.arow span{font-size:11px;color:var(--muted);font-weight:500}
+/* work mock */
+.wk{display:grid;grid-template-columns:.8fr 1.2fr;min-height:300px;position:relative}
+.wk .cl{border-right:1.5px solid var(--line);display:grid;grid-template-rows:1fr auto;min-width:0}
+.wk .chat{min-height:0;padding:8px;align-content:end}
+.wk .msg{font-size:11.5px;padding:6px 9px}
+.wk .iw{padding:0 8px 8px}.wk .inp{font-size:11.5px;min-height:34px;padding:6px 9px}
+.wk .pn{display:grid;grid-template-rows:auto 1fr;min-width:0;background:var(--surface)}
+.wk .ph{display:flex;gap:6px;align-items:center;padding:6px 8px;border-bottom:1.5px solid var(--line);background:var(--bg);font-size:12px;font-weight:900}
+.wk .ph span.tt{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wk .ph .pb{border:2px solid var(--ink);border-radius:999px;padding:0 9px;font-size:11px;white-space:nowrap}
+.wk .ph .pb.d{background:var(--ink);color:var(--bg)}
+.wk .pbd{padding:10px;position:relative;min-height:230px}
+.wdlg{position:absolute;right:8px;top:38px;z-index:5;background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:10px;width:200px;display:none;gap:6px;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.wdlg b{font-size:12.5px}.wdlg .op{border:1.5px solid var(--line);border-radius:8px;padding:4px 8px;font-weight:700}.wdlg .op.on{border-color:var(--ink);background:var(--c3);color:#0c0d12}
+.wmenu{position:absolute;right:8px;top:38px;z-index:5;background:var(--bg);border:2px solid var(--ink);border-radius:12px;display:none;font-size:12px;font-weight:700;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.2);min-width:150px}
+.wmenu div{padding:6px 12px}.wmenu div+div{border-top:1px solid var(--line)}
+.sk{display:grid;gap:8px;align-content:center;justify-items:center;min-height:200px;font-size:12px;font-weight:900;color:var(--muted)}
+.sk i{display:block;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--line),var(--bg),var(--line));background-size:200% 100%;animation:shm 1.2s linear infinite;width:80%}.sk i:nth-child(2){width:60%}.sk i:nth-child(3){width:70%}
+@keyframes shm{to{background-position:-200% 0}}
+.pp{background:var(--bg);border:1.5px solid var(--line);border-radius:8px;padding:10px;display:grid;gap:6px}
+.pp h4{margin:0;font-size:13px;font-weight:900}.pp .l{height:7px;border-radius:4px;background:var(--line)}.pp .l.s{width:60%}.pp .l.ed{background:var(--c1);outline:2px solid var(--c1);outline-offset:2px}
+.pp .h{height:9px;width:40%;border-radius:4px;background:var(--ink);margin-top:4px}
+.psl{display:grid;grid-template-columns:44px 1fr;gap:8px}.psl .th{display:grid;gap:5px;align-content:start}.psl .th i{display:block;aspect-ratio:16/9;border:1.5px solid var(--line);border-radius:3px;background:var(--bg)}.psl .th i.on{border-color:var(--ink);border-width:2px}
+.psl .mn{aspect-ratio:16/9;background:var(--bg);border:2px solid var(--ink);border-radius:6px;padding:10px;display:grid;gap:6px;align-content:center}.psl .mn b{font-size:14px}
+.psh{width:100%;border-collapse:collapse;font-size:10.5px;background:var(--bg)}.psh td,.psh th{border:1px solid var(--line);padding:3px 5px;text-align:left;white-space:nowrap}.psh th{background:var(--ink);color:var(--bg)}.psh td.ed{outline:2px solid var(--c1);outline-offset:-2px;font-weight:900}
+.psh .st{border-radius:999px;padding:0 6px;color:#fff;font-weight:900;font-size:9.5px}
+.pdg{display:grid;grid-template-columns:1fr .6fr 1.4fr;gap:8px;align-items:center}.pdg div{border:2px solid var(--ink);border-radius:5px;background:var(--bg);padding:6px;display:grid;gap:4px;align-content:end}.pdg div:nth-child(1){aspect-ratio:1}.pdg div:nth-child(2){aspect-ratio:9/16}.pdg div:nth-child(3){aspect-ratio:16/9}.pdg i{display:block;height:6px;border-radius:3px;background:var(--ink)}.pdg u{display:block;height:40%;border-radius:4px;background:var(--c5)}.pdg.ed u{background:var(--c2)}
+.pdt{display:grid;gap:8px}.pdt .k{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pdt .k div{background:var(--bg);border:1.5px solid var(--line);border-radius:6px;padding:5px 7px;font-size:10px;color:var(--muted)}.pdt .k b{display:block;font-size:15px;color:var(--ink);font-family:var(--mono)}
+.pdt .br{display:flex;gap:5px;align-items:flex-end;height:70px;background:var(--bg);border:1.5px solid var(--line);border-radius:6px;padding:6px}.pdt .br i{flex:1;background:var(--c2);border-radius:2px 2px 0 0}
+.pbo{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.pbo .sc{border:2px dashed var(--line);border-radius:8px;padding:5px;display:grid;gap:4px;align-content:start;font-size:10px;font-weight:900;min-height:120px}.pbo .sc i{display:block;font-style:normal;font-weight:700;padding:5px;border-radius:3px;color:#0c0d12;font-size:9.5px;box-shadow:1px 2px 0 rgba(0,0,0,.2)}
+.pbo .sc.ed{border-color:var(--c1);border-style:solid}
+.qn{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.qn a{border:2px solid var(--ink);border-radius:999px;padding:3px 14px;font-size:13.5px;font-weight:900;color:#fff;text-decoration:none;box-shadow:3px 3px 0 var(--ink)}
+.spot{display:grid;grid-template-columns:1fr 1.15fr;gap:22px;align-items:center;border:2px solid var(--ink);border-radius:20px;padding:22px;background:var(--bg);box-shadow:var(--sh);margin-bottom:26px}
+.spt{display:grid;gap:12px;justify-items:start}.spt h3{margin:0;font-family:var(--display);font-size:24px;line-height:1.3}.spt p{margin:0;font-size:15px}
+.sp4{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:8px;counter-reset:s;width:100%}.sp4 li{counter-increment:s;border:2px solid var(--ink);border-radius:12px;padding:8px 10px;font-size:12.5px;line-height:1.5;background:var(--surface)}.sp4 b{display:block;font-size:14px}.sp4 b:before{content:counter(s);display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--c6);color:#fff;font-size:12px;margin-right:6px}
+.spc{width:100%;aspect-ratio:16/10;border:2px solid var(--ink);border-radius:14px;display:block}
+@media (max-width:860px){.spot{grid-template-columns:1fr}}
+.chainb{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.chainb span{border:2px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:13px;font-weight:900;color:#fff}.chainb i{font-style:normal;font-family:var(--display)}
+@media (max-width:860px){.tabs.t3{grid-template-columns:1fr}.tiles{grid-template-columns:repeat(3,1fr)}.hm{grid-template-columns:96px 1fr}.hm .side div{font-size:10.5px}.tile{font-size:9.5px}.wk{grid-template-columns:1fr}.wk .cl{border-right:0;border-bottom:1.5px solid var(--line)}.wk .chat{min-height:70px}}
+.card{--k:var(--c1)}
+.card[data-c="kihon"]{--k:var(--c1)}.card[data-c="shikumi"]{--k:var(--c5)}.card[data-c="tsunagu"]{--k:var(--c4)}.card[data-c="makaseru"]{--k:var(--c2)}.card[data-c="tsukuru"]{--k:var(--c3)}.card[data-c="okane"]{--k:var(--c6)}.card[data-c="anzen"]{--k:var(--ink)}
+.card[data-c="tsukuru"] .ico{color:#0c0d12}.card[data-c="anzen"] .ico{color:var(--bg)}
+.cards.y3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card .yomi{font-size:12px;color:var(--muted);font-weight:700}
+.card .pvc{aspect-ratio:16/9}
+.must{font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px solid var(--ink);line-height:1.7;background:var(--c3);color:#0c0d12}
+.catp{color:var(--ink);font-size:11.5px;font-weight:900;padding:1px 9px;border-radius:999px;border:2px solid var(--ink);line-height:1.7;background:var(--bg)}
+.more{border-top:2px dashed var(--line);padding-top:10px}
+.more summary{cursor:pointer;font-weight:900;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center;min-height:32px}
+.more summary::-webkit-details-marker{display:none}.more summary:after{content:"開く ▼";font-size:12px;color:var(--muted)}.more[open] summary:after{content:"閉じる ▲"}
+.more .in{display:grid;gap:10px;margin-top:8px}.more .in p{margin:0;font-size:14px}
+.rel{display:flex;flex-wrap:wrap;gap:6px}.rel a{font-size:12px;font-weight:900;border:2px solid var(--ink);border-radius:999px;padding:1px 10px;text-decoration:none;color:var(--ink);background:var(--surface)}
+.kn{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:900;cursor:pointer;min-height:32px}.kn input{width:20px;height:20px;accent-color:var(--c4)}
+.srch{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:14px}
+.srch input{font:inherit;font-size:17px;font-weight:700;padding:12px 16px;border:2px solid var(--ink);border-radius:14px;background:var(--bg);color:var(--ink);box-shadow:var(--sh);width:100%;min-width:0}
+.srch input:focus{outline:3px solid var(--c1);outline-offset:2px}
+.srch span{font-size:13px;font-weight:900;white-space:nowrap}
+.nohit{grid-column:1/-1;padding:30px;text-align:center;font-weight:900;border:2px dashed var(--line);border-radius:14px}
+.cath{grid-column:1/-1;display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-top:14px;border-bottom:3px solid var(--ink);padding-bottom:6px}
+.cath b{font-family:var(--display);font-size:22px}.cath span{font-size:14px;color:var(--muted);font-weight:700}
+.cath i{font-style:normal;width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);display:inline-block;align-self:center}
+/* screen map */
+.smap{display:grid;grid-template-columns:1fr 1fr;min-height:330px;position:relative;font-size:12px}
+.smap .l{display:grid;grid-template-rows:auto 1fr auto auto;border-right:1.5px solid var(--line);min-width:0}
+.smap .hd2{display:flex;gap:6px;padding:8px;border-bottom:1.5px solid var(--line);flex-wrap:wrap}
+.smap .plb{border:1.5px solid var(--line);border-radius:999px;padding:1px 9px;font-weight:900;font-size:11.5px;background:var(--bg);white-space:nowrap}
+.smap .lg{padding:8px;display:grid;gap:6px;align-content:end}
+.smap .msg{font-size:11.5px;padding:6px 9px}
+.smap .cite{display:inline-block;border:1.5px solid var(--ink);border-radius:999px;padding:0 7px;font-size:10px;font-weight:900;margin-top:4px}
+.smap .ib{margin:0 8px 6px;border:2px solid var(--ink);border-radius:12px;padding:6px 8px;display:flex;gap:6px;align-items:center}
+.smap .ib span.t{flex:1;color:var(--muted)}
+.smap .ft2{display:flex;gap:8px;align-items:center;padding:0 8px 8px;font-size:10.5px;color:var(--muted)}
+.smap .mt{flex:1;height:7px;border-radius:4px;background:var(--line);overflow:hidden}.smap .mt i{display:block;width:62%;height:100%;background:var(--c2)}
+.smap .r{background:var(--surface);display:grid;grid-template-rows:auto 1fr;min-width:0}
+.smap .r .ph{display:flex;justify-content:space-between;padding:8px;border-bottom:1.5px solid var(--line);background:var(--bg);font-weight:900}
+.smap .r .bd2{padding:10px;display:grid;gap:6px;align-content:start}
+.smap .r .bd2 i{display:block;height:7px;border-radius:4px;background:var(--line)}.smap .r .bd2 b{font-size:13px}
+.ypin{position:relative}
+.ypin:after{content:attr(data-n);position:absolute;right:-8px;top:-10px;width:18px;height:18px;border-radius:50%;background:var(--c2);color:#fff;font-size:10.5px;font-weight:900;display:grid;place-items:center;border:1.5px solid var(--ink);z-index:2}
+@media (max-width:1000px){.cards.y3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){.cards.y3{grid-template-columns:1fr}.smap{grid-template-columns:1fr}.smap .l{border-right:0;border-bottom:1.5px solid var(--line)}.srch{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="#top">AI用語大全</a>
+  <nav aria-label="ページ内メニュー">
+    <a href="#gamen">画面で見る</a><a href="#zukan">用語を探す</a><a href="#qa">Q&amp;A</a>
+  </nav>
+  <button class="theme" id="themeBtn" type="button" aria-label="背景の色を切り替える">黒にする</button>
+</div></header>
+
+<main id="top">
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <span class="stk">2026年11月版　全72語</span>
+    <h1 style="margin-top:14px;font-size:clamp(36px,5.6vw,66px)">AI<em>用語大全</em></h1>
+    <p class="sub">トークン、エージェント、MCP、スキル。SNSやAIツールの画面でよく見る言葉だけを選び、動く図で1語ずつ解説。検索すれば、知りたい言葉がすぐ見つかります。</p>
+    <div class="cta">
+      <a class="btn pri" href="#zukan">用語を検索する</a>
+      <a class="btn yl" href="#gamen">画面のどこに出るか見る</a>
+    </div>
+  </div>
+  <canvas class="heroCv" data-pv="hero" aria-hidden="true"></canvas>
+</div></section>
+<div class="mq" aria-hidden="true"><div id="mq"></div></div>
+<div class="wrap"><div class="cpy"><p>このサイトの著作権はレオに属します。</p><p>レオのアカウントは<a href="https://www.threads.com/@nft_web3_reo" target="_blank" rel="noopener">こちら</a></p><p>複製、転載、その他コピーして配布することを禁じます。</p></div></div>
+<div class="wrap"><div class="sum"><b>このサイトの使い方</b><ol><li>知らない言葉に出会ったら、検索欄に入れる。読みや英語でも見つかる</li><li>時間がある時は「まず覚える10語」だけ読む。これでAIの記事の大半が読めるようになる</li><li>覚えた言葉にチェックを付けていくと、進み具合が残る</li></ol><div class="qn" id="qn"></div></div></div>
+
+<section id="gamen" style="background:var(--surface);border-block:2px solid var(--ink)"><div class="wrap">
+  <div class="sec-head">
+    <span class="stk g">画面で見る</span>
+    <h2>その言葉、AIの画面のどこに出てくる？</h2>
+    <p class="lead">用語は、実際の画面と結びつけると覚えやすくなります。番号を押すと、画面のその場所が光ります。ClaudeやChatGPT、Geminiに共通する作りを1枚にまとめたイメージです。</p>
+  </div>
+  <div class="demo">
+    <ol class="steps" id="stepList"></ol>
+    <div class="player" style="background:var(--bg)">
+      <div class="pbar">
+        <button class="btn sm pri" type="button" id="playB">▶ 再生</button>
+        <button class="btn sm" type="button" id="prevB">← 前へ</button>
+        <button class="btn sm" type="button" id="nextB">次へ →</button>
+        <span class="stepno" id="stepNo">1 / 8</span>
+      </div>
+      <div class="capt"><b id="capNo">1</b><span id="capt"></span></div>
+      <div class="stage" id="stage">
+        <div class="scr on"><div class="win"><div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="url">AIチャットの画面（イメージ）</span></div>
+          <div class="smap">
+            <div class="l">
+              <div class="hd2"><span class="plb ypin" id="p1" data-n="1">モデル ▾</span><span class="plb ypin" id="p2" data-n="2">考える深さ ▾</span><span class="plb ypin" id="p7" data-n="7">メモリ</span></div>
+              <div class="lg chat"><div class="msg u ypin" id="p3" data-n="3">来月の発信プランを、表つきでまとめて</div><div class="msg a">Googleカレンダーの予定をもとに作りました。<br><span class="cite ypin" id="p5" data-n="5">出典 3件</span></div></div>
+              <div class="ib"><span class="plb ypin" id="p4" data-n="4">＋ 連携</span><span class="t">メッセージを入力</span></div>
+              <div class="ft2"><span class="ypin" id="p8" data-n="8">今週の使用量</span><div class="mt"><i></i></div><span>62%</span></div>
+            </div>
+            <div class="r"><div class="ph"><span class="ypin" id="p6" data-n="6">来月の発信プラン</span><span class="plb">共有</span></div><div class="bd2"><b>12月の発信プラン</b><i></i><i></i><i style="width:60%"></i><i></i><i style="width:75%"></i></div></div>
+          </div></div></div>
+        <div class="cursor" id="cur" aria-hidden="true"></div>
+      </div>
+      <div class="ptip"><b>ポイント</b>　<span id="tip"></span>　<a href="#" id="tipJump" style="font-weight:900">この用語を読む →</a></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="zukan"><div class="wrap">
+  <div class="sec-head">
+    <span class="stk v">用語を探す</span>
+    <h2>72語、ぜんぶ動く図つき</h2>
+    <p class="lead">動く図は、その言葉の働きを表したイメージです。「くわしく」を開くと、具体例と、よくある勘違いが読めます。</p>
+  </div>
+  <div class="srch"><input type="search" id="q" placeholder="用語を検索（例　トークン、えむしーぴー、agent）" aria-label="用語を検索" autocomplete="off"><span id="hitN"></span></div>
+  <div class="filters" id="filters" role="group" aria-label="絞り込み"></div>
+  <div class="prog" aria-hidden="true" style="margin-top:6px"><i id="progBar"></i></div>
+  <p class="small" id="progTxt" style="margin:6px 0 4px"></p>
+  <div class="cards y3" id="cards"></div>
+</div></section>
+
+<section id="qa" style="background:var(--surface);border-top:2px solid var(--ink)"><div class="wrap">
+  <div class="sec-head"><span class="stk b">Q&amp;A</span><h2>言葉でつまずきやすい所</h2></div>
+  <div class="faq">
+    <details><summary>全部覚えないと、AIは使えない？</summary><p>使えます。ふだんの質問や文章づくりなら、言葉を知らなくても困りません。記事や投稿を読んで「これ何？」となった時に、ここで調べる使い方で十分です。</p></details>
+    <details><summary>MCPとコネクタとスキル、違いが分からない</summary><p>MCPは、AIと外部アプリをつなぐための共通の決まり。コネクタは、その決まりを使って実際にアプリをつなぐ窓口。スキルは、AIに渡す作業の手順書です。つなぐのがMCPとコネクタ、やり方を教えるのがスキル、と分けると整理できます。</p></details>
+    <details><summary>モデルとアプリは何が違う？</summary><p>アプリは入れ物、モデルは中で動く頭脳。ChatGPTやGeminiというアプリの中で、複数のモデルを切り替えて使う作りになっています。</p></details>
+    <details><summary>会社やサービスによって、呼び方が違うのはなぜ？</summary><p>同じ働きに、各社が別の名前を付けているためです。たとえば考える深さの設定は、思考レベル、Thinking、推論など呼び方がさまざま。このサイトでは、検索で別名からも見つかるようにしています。</p></details>
+    <details><summary>新しい言葉は、どこで追えばいい？</summary><p>各社の公式ブログと、アプリ内のお知らせが一番確実。SNSで見かけた言葉は、まず公式の発表があるかを確かめると、うわさに振り回されません。</p></details>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap">
+  <p>最終更新 2026年11月21日。言葉の意味は、初心者向けに分かりやすさを優先してまとめています。機能の名前や仕様は各社の更新で変わることがあります。動く図と画面はすべてイメージです。このページは、各AIサービスの公式ページではありません。</p>
+</div></footer>
+<button class="totop" type="button" id="toTop" aria-label="ページの先頭へ戻る">↑</button>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+var toastT;
+function toast(m){var t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove("on")},1800)}
+function copyText(text){var done=function(){toast("コピーしました")},fail=function(){toast("コピーできませんでした。文字を選択してコピーしてください")};
+  try{navigator.clipboard.writeText(text).then(done,fail)}catch(e){fail()}}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-copy]");if(b)copyText(b.getAttribute("data-copy"))});
+
+/* theme */
+var root=document.documentElement,themeBtn=$("#themeBtn"),C={};
+function readC(){var s=getComputedStyle(root),g=function(n){return s.getPropertyValue(n).trim()};
+  C={bg:g("--bg"),sur:g("--surface"),ink:g("--ink"),mut:g("--muted"),line:g("--line"),c1:g("--c1"),c2:g("--c2"),c3:g("--c3"),c4:g("--c4"),c5:g("--c5"),c6:g("--c6")};C.pal=[C.c1,C.c2,C.c3,C.c4,C.c5]}
+function isDark(){var t=root.getAttribute("data-theme");if(t)return t==="dark";return window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)").matches}
+function paintTheme(){themeBtn.textContent=isDark()?"白にする":"黒にする";readC();drawAllOnce()}
+var saved=store("avz-theme");if(saved==="dark"||saved==="light")root.setAttribute("data-theme",saved);
+themeBtn.addEventListener("click",function(){var n=isDark()?"light":"dark";root.setAttribute("data-theme",n);store("avz-theme",n);paintTheme()});
+
+/* canvas helpers */
+function cl(x){return x<0?0:x>1?1:x}
+function seg(t,a,b){return cl((t-a)/(b-a))}
+var E={out:function(t){return 1-Math.pow(1-t,3)},io:function(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2},
+ back:function(t){var c=1.70158;return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2)}};
+function hs(n){var x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)}
+function rr(c,x,y,w,h,r){r=Math.max(0,Math.min(r,Math.abs(w)/2,Math.abs(h)/2));c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath()}
+function mono(p){return "700 "+p+"px 'JetBrains Mono',monospace"}
+function sans(p){return "900 "+p+"px 'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN',sans-serif"}
+function disp(p){return p+"px 'Dela Gothic One','Zen Kaku Gothic New',sans-serif"}
+function lerp(a,b,k){return a+(b-a)*k}
+function tri(c,x,y,s){c.beginPath();c.moveTo(x+s,y);c.lineTo(x-s*.6,y-s*.8);c.lineTo(x-s*.6,y+s*.8);c.closePath();c.fill()}
+function fmt(n){return Math.round(n).toLocaleString("ja-JP")}
+function card(c,x,y,w,h,r,fill){c.fillStyle=C.ink;rr(c,x+4,y+4,w,h,r);c.fill();c.fillStyle=fill||C.bg;rr(c,x,y,w,h,r);c.fill();c.strokeStyle=C.ink;c.lineWidth=2;c.stroke()}
+function tx(c,s,x,y,f,col,al,bl){c.font=f;c.fillStyle=col;c.textAlign=al||"left";c.textBaseline=bl||"middle";c.fillText(s,x,y);c.textAlign="left"}
+function bg(c,w,h){c.fillStyle=C.sur;c.fillRect(0,0,w,h)}
+function check(c,x,y,r,col){c.fillStyle=col||C.c4;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.strokeStyle="#fff";c.lineWidth=Math.max(2,r*.28);c.beginPath();c.moveTo(x-r*.45,y);c.lineTo(x-r*.1,y+r*.38);c.lineTo(x+r*.5,y-r*.32);c.stroke()}
+function typed(s,k){return s.slice(0,Math.ceil(s.length*cl(k)))}
+
+var PV={};
+function F(h,k){return Math.max(8,h*k)}
+function pill(c,s,x,y,col,fc,fs){c.font=sans(fs);var tw=c.measureText(s).width+fs*1.4;c.fillStyle=col;rr(c,x,y-fs*.9,tw,fs*1.8,fs*.9);c.fill();tx(c,s,x+fs*.7,y+1,sans(fs),fc||"#fff");return tw}
+function node(c,x,y,w,h,s,col,fc){c.fillStyle=C.ink;rr(c,x+3,y+3,w,h,8);c.fill();c.fillStyle=col||C.bg;rr(c,x,y,w,h,8);c.fill();c.strokeStyle=C.ink;c.lineWidth=2;c.stroke();if(s)tx(c,s,x+w/2,y+h/2+1,sans(Math.max(8,Math.min(14,h*.4,(w-8)/s.length))),fc||C.ink,"center")}
+function dot(c,x,y,r,col){c.fillStyle=col;c.beginPath();c.arc(x,y,r,0,7);c.fill()}
+function line(c,x1,y1,x2,y2,col,lw,dash){c.strokeStyle=col;c.lineWidth=lw||2;c.setLineDash(dash||[]);c.beginPath();c.moveTo(x1,y1);c.lineTo(x2,y2);c.stroke();c.setLineDash([])}
+function flow(c,x1,y1,x2,y2,t,col,back){line(c,x1,y1,x2,y2,C.line,2,[5,5]);var p=(t%1.4)/1.4;if(back)p=1-p;dot(c,lerp(x1,x2,p),lerp(y1,y2,p),5,col)}
+function wave(c,x,y,w,amp,col,prog,t){var n=36;for(var i=0;i<n;i++){if(i/n>prog)break;var v=amp*(.2+.8*Math.abs(Math.sin(i*.55)*Math.sin(i*.17+t*2)));c.fillStyle=col;rr(c,x+i*w/n,y-v/2,w/n-2,v,2);c.fill()}}
+function scene(c,x,y,w,h,night){c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.fillStyle=night?"#1b2250":"#8fd0ff";c.fillRect(x,y,w,h);dot(c,x+w*.74,y+h*.3,h*.13,night?"#f4f1d0":"#ffc21a");c.fillStyle=night?"#0e1230":"#2f9e6a";c.beginPath();c.moveTo(x,y+h);c.lineTo(x,y+h*.7);c.quadraticCurveTo(x+w*.3,y+h*.45,x+w*.6,y+h*.72);c.quadraticCurveTo(x+w*.8,y+h*.6,x+w,y+h*.75);c.lineTo(x+w,y+h);c.fill();c.restore();c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,y,w,h)}
+function lines(c,x,y,w,n,gap,k,col){for(var i=0;i<n;i++){var lk=cl((k===undefined?1:k)*n-i);c.fillStyle=col||C.line;rr(c,x,y+i*gap,w*(i===n-1?.55:1)*lk,gap*.42,3);c.fill()}}
+function ai(c,x,y,r,t){dot(c,x+3,y+3,r,C.ink);dot(c,x,y,r,C.c1);c.strokeStyle=C.ink;c.lineWidth=2;c.beginPath();c.arc(x,y,r,0,7);c.stroke();tx(c,"AI",x,y+1,sans(r*.7),"#fff","center");if(t!==undefined){c.strokeStyle=C.c1;c.globalAlpha=.4;c.lineWidth=2;c.beginPath();c.arc(x,y,r*(1.25+.12*Math.sin(t*3)),0,7);c.stroke();c.globalAlpha=1}}
+
+PV.genai=function(c,w,h,t){bg(c,w,h);var u=t%6;node(c,w*.05,h*.38,w*.3,h*.24,typed("こんなの作って",seg(u,.2,1.2)),C.bg);flow(c,w*.36,h*.5,w*.48,h*.5,t,C.c2);ai(c,w*.55,h*.5,h*.14,t);["文章","画像","動画","音楽"].forEach(function(s,i){var k=E.back(seg(u,1.6+i*.5,2+i*.5));if(k<=0)return;c.save();c.translate(w*.84,h*(.17+i*.22));c.scale(k,k);node(c,-w*.11,-h*.08,w*.22,h*.16,s,C.pal[i],i===2?"#0c0d12":"#fff");c.restore();line(c,w*.62,h*.5,w*.73,h*(.17+i*.22),C.ink,2)})};
+PV.llm=function(c,w,h,t){bg(c,w,h);var W=["今日","の","天気","は"],N=[["晴れ",62],["雨",21],["曇り",12]],u=t%5,x=w*.06;c.font=sans(F(h,.09));W.forEach(function(s,i){var tw=c.measureText(s).width+14;node(c,x,h*.14,tw,h*.18,s);x+=tw+6});var sel=u>3;if(sel)node(c,x,h*.14,w*.16,h*.18,"晴れ",C.c3,"#0c0d12");else{c.strokeStyle=C.ink;c.setLineDash([5,4]);c.strokeRect(x,h*.14,w*.14,h*.18);c.setLineDash([]);tx(c,"？",x+w*.07,h*.23,sans(F(h,.09)),C.mut,"center")}
+ tx(c,"次に来そうな言葉",w*.06,h*.46,sans(F(h,.06)),C.mut);N.forEach(function(n,i){var y=h*(.58+i*.13),k=E.out(seg(u,.5+i*.3,1.6+i*.3));tx(c,n[0],w*.06,y,sans(F(h,.07)),C.ink);c.fillStyle=C.line;rr(c,w*.22,y-h*.035,w*.56,h*.07,4);c.fill();c.fillStyle=i===0?C.c1:C.mut;rr(c,w*.22,y-h*.035,w*.56*n[1]/100*k,h*.07,4);c.fill();tx(c,Math.round(n[1]*k)+"%",w*.82,y,mono(F(h,.06)),C.ink)})};
+PV.model=function(c,w,h,t){bg(c,w,h);var M=[["速い",C.c4],["標準",C.c1],["賢い",C.c5]],n=Math.floor(t/2)%3,u=(t%2)/2;card(c,w*.08,h*.1,w*.5,h*.8,10);tx(c,"アプリ（入れ物）",w*.33,h*.2,sans(F(h,.06)),C.mut,"center");var k=E.back(seg(u,0,.35));c.save();c.translate(w*.33,h*.55);c.scale(k,k);dot(c,3,3,h*.2,C.ink);dot(c,0,0,h*.2,M[n][1]);tx(c,M[n][0],0,1,sans(F(h,.09)),"#fff","center");c.restore();M.forEach(function(m,i){node(c,w*.68,h*(.14+i*.26),w*.24,h*.18,m[0]+"モデル",i===n?m[1]:C.bg,i===n?"#fff":C.ink)});line(c,w*.68,h*(.23+n*.26),w*.47,h*.55,C.ink,2,[5,4])};
+PV.prompt=function(c,w,h,t){bg(c,w,h);var good=Math.floor(t/3.5)%2,u=(t%3.5)/3.5;card(c,w*.05,h*.08,w*.42,h*.84,8);tx(c,"頼み方",w*.08,h*.17,sans(F(h,.055)),C.mut);tx(c,typed(good?"初心者向けに":"記事書いて",seg(u,.05,.3)),w*.08,h*.3,sans(F(h,.075)),C.ink);if(good){tx(c,typed("3つの見出しで",seg(u,.15,.4)),w*.08,h*.42,sans(F(h,.075)),C.ink);tx(c,typed("500文字の記事",seg(u,.25,.5)),w*.08,h*.54,sans(F(h,.075)),C.ink);["誰向け","形","長さ"].forEach(function(s,i){pill(c,s,w*(.08+i*.125),h*.76,C.c4,"#fff",F(h,.045))})}
+ card(c,w*.53,h*.08,w*.42,h*.84,8);tx(c,"返ってくるもの",w*.56,h*.17,sans(F(h,.055)),C.mut);var k=seg(u,.5,.9);if(good){for(var i=0;i<3;i++){c.fillStyle=C.ink;rr(c,w*.56,h*(.26+i*.2),w*.2*cl(k*3-i),h*.04,3);c.fill();lines(c,w*.56,h*(.33+i*.2),w*.34,2,h*.045,cl(k*3-i))}}else lines(c,w*.56,h*.3,w*.34,8,h*.07,k);pill(c,good?"ねらい通り":"ぼんやり",w*.68,h*.87,good?C.c4:C.c2,"#fff",F(h,.05))};
+PV.token=function(c,w,h,t){bg(c,w,h);var T=["AI","で","動画","を","作る","方法","を","教えて"],u=t%6,x=w*.05,y=h*.2,n=0;c.font=sans(F(h,.085));T.forEach(function(s,i){var tw=c.measureText(s).width+16,k=seg(u,.3+i*.35,.6+i*.35);if(x+tw>w*.95){x=w*.05;y+=h*.24}if(k>0){n++;c.globalAlpha=k;c.fillStyle=C.pal[i%5];rr(c,x,y,tw,h*.18,6);c.fill();tx(c,s,x+tw/2,y+h*.09+1,sans(F(h,.085)),i%5===2?"#0c0d12":"#fff","center");c.globalAlpha=1}else{tx(c,s,x+tw/2,y+h*.09+1,sans(F(h,.085)),C.mut,"center")}x+=tw+5});tx(c,"トークン数",w*.05,h*.82,sans(F(h,.065)),C.ink);tx(c,String(n),w*.33,h*.82,disp(F(h,.16)),C.c1);tx(c,"料金と上限は、この数で数える",w*.48,h*.82,sans(F(h,.05)),C.mut)};
+PV.context=function(c,w,h,t){bg(c,w,h);var off=(t*.35)%1,bw=w*.13,i;for(i=-1;i<8;i++){var x=w*.02+(i-off)*(bw+8),inw=x>w*.3&&x+bw<w*.86;c.globalAlpha=inw?1:.3;c.fillStyle=i%2?C.c1:C.sur;c.strokeStyle=C.ink;c.lineWidth=1.5;rr(c,x,h*.34,bw,h*.3,6);c.fill();c.stroke();c.globalAlpha=1}c.strokeStyle=C.c2;c.lineWidth=4;rr(c,w*.29,h*.24,w*.58,h*.5,10);c.stroke();pill(c,"AIが一度に見られる範囲",w*.3,h*.14,C.c2,"#fff",F(h,.055));tx(c,"← 古い会話は範囲の外へ",w*.03,h*.86,sans(F(h,.055)),C.mut)};
+PV.sysprompt=function(c,w,h,t){bg(c,w,h);var u=t%6;c.save();c.translate(w*.5,h*.16);c.rotate(-.02);node(c,-w*.42,-h*.09,w*.84,h*.18,"いつも「です・ます」で、短く答える",C.c3,"#0c0d12");c.restore();dot(c,w*.5,h*.07,5,C.c2);for(var i=0;i<3;i++){var k=seg(u,.6+i*1.4,1.2+i*1.4);if(k<=0)continue;var y=h*(.38+i*.19);c.globalAlpha=k;c.fillStyle=C.sur;rr(c,w*.1,y,w*.6,h*.14,8);c.fill();lines(c,w*.13,y+h*.04,w*.4,2,h*.045);check(c,w*.78,y+h*.07,9);tx(c,"守る",w*.82,y+h*.07,sans(F(h,.05)),C.ink);c.globalAlpha=1}};
+PV.memory=function(c,w,h,t){bg(c,w,h);var u=t%7;card(c,w*.04,h*.1,w*.34,h*.5,8);tx(c,"先週の会話",w*.07,h*.19,sans(F(h,.05)),C.mut);tx(c,"noteを売ってます",w*.07,h*.33,sans(F(h,.055)),C.ink);card(c,w*.62,h*.1,w*.34,h*.5,8);tx(c,"今日の会話",w*.65,h*.19,sans(F(h,.05)),C.mut);node(c,w*.36,h*.68,w*.28,h*.22,"メモリ",C.c5,"#fff");var a=E.io(seg(u,.8,2.2)),b=E.io(seg(u,3.2,4.6));if(a>0&&u<3.2)dot(c,lerp(w*.2,w*.5,a),lerp(h*.42,h*.68,a),7,C.c3);if(b>0)dot(c,lerp(w*.5,w*.8,b),lerp(h*.68,h*.42,b),7,C.c3);if(u>4.6)tx(c,"note向けに書きますね",w*.65,h*.4,sans(F(h,.048)),C.c1)};
+PV.halluc=function(c,w,h,t){bg(c,w,h);var u=t%7;card(c,w*.06,h*.1,w*.55,h*.8,8);for(var i=0;i<5;i++){var bad=i===2,y=h*(.2+i*.14);c.fillStyle=bad&&u>2?C.c2:C.line;rr(c,w*.1,y,w*.4*(i===4?.6:1),h*.05,3);c.fill();if(u>2.6+i*.4){if(bad){tx(c,"✕",w*.55,y+h*.03,sans(F(h,.08)),C.c2,"center")}else check(c,w*.55,y+h*.025,8)}}pill(c,"もっともらしい間違い",w*.66,h*.25,C.c2,"#fff",F(h,.047));tx(c,"数字、日付、固有名詞は",w*.66,h*.5,sans(F(h,.047)),C.ink);tx(c,"元の情報で確認",w*.66,h*.62,sans(F(h,.047)),C.ink)};
+PV.think=function(c,w,h,t){bg(c,w,h);var lv=(Math.sin(t*.8)+1)/2,L=["低","中","高","最高"];line(c,w*.1,h*.2,w*.9,h*.2,C.line,8);line(c,w*.1,h*.2,lerp(w*.1,w*.9,lv),h*.2,C.c5,8);dot(c,lerp(w*.1,w*.9,lv),h*.2,h*.06,C.ink);L.forEach(function(s,i){tx(c,s,w*(.1+i*.8/3),h*.36,sans(F(h,.055)),C.mut,"center")});[["考える深さ",lv,C.c5],["返事の速さ",1-lv*.8,C.c4],["使う量",.2+lv*.8,C.c2]].forEach(function(r,i){var y=h*(.56+i*.14);tx(c,r[0],w*.1,y,sans(F(h,.055)),C.ink);c.fillStyle=C.line;rr(c,w*.36,y-h*.035,w*.54,h*.07,4);c.fill();c.fillStyle=r[2];rr(c,w*.36,y-h*.035,w*.54*r[1],h*.07,4);c.fill()})};
+PV.multi=function(c,w,h,t){bg(c,w,h);["文字","画像","音声","動画"].forEach(function(s,i){var y=h*(.14+i*.24);node(c,w*.05,y-h*.08,w*.2,h*.16,s,C.pal[i],i===2?"#0c0d12":"#fff");flow(c,w*.26,y,w*.44,h*.5,t+i*.3,C.pal[i])});ai(c,w*.52,h*.5,h*.15,t);flow(c,w*.6,h*.5,w*.72,h*.5,t,C.c1);node(c,w*.73,h*.38,w*.22,h*.24,"まとめて理解",C.bg)};
+PV.cutoff=function(c,w,h,t){bg(c,w,h);var u=t%7,x1=w*.08,x2=w*.92,cx=w*.58;line(c,x1,h*.5,x2,h*.5,C.ink,3);line(c,cx,h*.2,cx,h*.8,C.c2,3,[6,5]);pill(c,"学習はここまで",cx-w*.14,h*.13,C.c2,"#fff",F(h,.05));for(var i=0;i<6;i++){var x=lerp(x1,x2,(i+.5)/6),after=x>cx;dot(c,x,h*.5,h*.035,after?C.line:C.c1);if(after){var k=seg(u,3+ (i-3)*.8,3.6+(i-3)*.8);tx(c,k>0?"検索":"？",x,h*.34,sans(F(h,.06)),k>0?C.c4:C.mut,"center")}else check(c,x,h*.35,7)}tx(c,"知っている",w*.2,h*.72,sans(F(h,.055)),C.c1);tx(c,"知らない。検索で補う",cx+w*.03,h*.72,sans(F(h,.055)),C.mut)};
+PV.bench=function(c,w,h,t){bg(c,w,h);var u=t%5,B=[["モデルA",61,C.c1],["モデルB",54,C.c4],["モデルC",47,C.c5]];tx(c,"同じテストを解かせて点数で比べる",w*.06,h*.14,sans(F(h,.055)),C.mut);B.forEach(function(b,i){var y=h*(.34+i*.2),k=E.out(seg(u,.3+i*.2,2+i*.2));tx(c,b[0],w*.06,y,sans(F(h,.06)),C.ink);c.fillStyle=b[2];rr(c,w*.26,y-h*.05,w*.6*b[1]/70*k,h*.1,5);c.fill();tx(c,String(Math.round(b[1]*k)),w*.28+w*.6*b[1]/70*k,y,mono(F(h,.07)),C.ink)});tx(c,"点数が高い＝自分の用途に合う、とは限らない",w*.06,h*.9,sans(F(h,.045)),C.mut)};
+PV.rag=function(c,w,h,t){bg(c,w,h);var u=t%6,hit=Math.floor(u)%4;node(c,w*.04,h*.38,w*.2,h*.24,"質問",C.bg);for(var i=0;i<4;i++){var on=u>1.2&&i===1||u>1.8&&i===3;node(c,w*.34+(i%2)*w*.14,h*(.14+Math.floor(i/2)*.4),w*.11,h*.3,"",on?C.c3:C.bg);lines(c,w*.355+(i%2)*w*.14,h*(.2+Math.floor(i/2)*.4),w*.07,3,h*.06)}tx(c,"自分の資料",w*.47,h*.93,sans(F(h,.05)),C.mut,"center");ai(c,w*.72,h*.5,h*.12,t);flow(c,w*.25,h*.5,w*.33,h*.5,t,C.c2);flow(c,w*.61,h*.5,w*.66,h*.5,t,C.c3);if(u>3){node(c,w*.8,h*.36,w*.17,h*.28,"答え",C.c4,"#fff");pill(c,"出典つき",w*.8,h*.78,C.ink,C.bg,F(h,.045))}};
+PV.finetune=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,1,4));for(var i=0;i<5;i++){var p=seg(u,.6+i*.5,1.4+i*.5);if(p<1)node(c,lerp(w*.06,w*.4,E.io(p)),h*(.2+i*.12),w*.16,h*.1,"例文",C.c3,"#0c0d12")}c.save();c.translate(w*.56,h*.5);var r=h*.2;dot(c,3,3,r,C.ink);c.fillStyle=C.c1;c.beginPath();c.arc(0,0,r,0,7);c.fill();c.fillStyle=C.c5;c.beginPath();c.moveTo(0,0);c.arc(0,0,r,-Math.PI/2,-Math.PI/2+k*Math.PI*2);c.fill();tx(c,"AI",0,1,sans(r*.6),"#fff","center");c.restore();node(c,w*.76,h*.38,w*.2,h*.24,k>=1?"自分専用":"調整中",k>=1?C.c5:C.bg,k>=1?"#fff":C.ink)};
+PV.api=function(c,w,h,t){bg(c,w,h);node(c,w*.05,h*.3,w*.26,h*.4,"自分のツール",C.bg);node(c,w*.69,h*.3,w*.26,h*.4,"AI",C.c1,"#fff");line(c,w*.31,h*.42,w*.69,h*.42,C.ink,3);line(c,w*.31,h*.58,w*.69,h*.58,C.ink,3);var p=(t%1.6)/1.6;node(c,lerp(w*.32,w*.6,p),h*.34,w*.08,h*.16,"依頼",C.c3,"#0c0d12");node(c,lerp(w*.6,w*.32,p),h*.5,w*.08,h*.16,"返事",C.c4,"#fff");tx(c,"使った分だけ",w*.5,h*.84,sans(F(h,.055)),C.mut,"center");tx(c,"$ "+(Math.floor(t*3)%900/1000).toFixed(3),w*.5,h*.16,mono(F(h,.08)),C.c2,"center")};
+PV.apikey=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,.4,2)),x=lerp(w*.12,w*.5,k),y=h*.42;c.save();c.translate(x,y);dot(c,0,0,h*.1,C.c3);dot(c,0,0,h*.04,C.bg);c.fillStyle=C.c3;c.fillRect(h*.08,-h*.025,w*.16,h*.05);c.fillRect(w*.13,0,h*.03,h*.07);c.fillRect(w*.17,0,h*.03,h*.09);c.restore();var open=u>2.2;node(c,w*.7,h*.26,w*.22,h*.32,open?"開いた":"AI",open?C.c4:C.c1,"#fff");tx(c,"sk-••••••••••••",w*.08,h*.74,mono(F(h,.07)),C.ink);pill(c,"人に見せない、投稿に載せない",w*.08,h*.9,C.c2,"#fff",F(h,.048))};
+PV.mcp=function(c,w,h,t){bg(c,w,h);ai(c,w*.16,h*.5,h*.15,t);node(c,w*.4,h*.36,w*.16,h*.28,"MCP",C.ink,C.bg);line(c,w*.24,h*.5,w*.4,h*.5,C.ink,4);["カレンダー","メール","デザイン","動画AI"].forEach(function(s,i){var y=h*(.14+i*.24);flow(c,w*.56,h*.5,w*.72,y,t+i*.35,C.pal[i],i%2);node(c,w*.72,y-h*.08,w*.24,h*.16,s,C.pal[i],i===2?"#0c0d12":"#fff")});tx(c,"つなぎ方の共通ルール",w*.48,h*.76,sans(F(h,.045)),C.mut,"center")};
+PV.connector=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.06,h*.08,w*.88,h*.84,8);tx(c,"設定 ＞ コネクタ",w*.1,h*.18,sans(F(h,.055)),C.mut);["Googleカレンダー","Gmail","Canva"].forEach(function(s,i){var y=h*(.34+i*.19),on=E.io(seg(u,.8+i*1.2,1.3+i*1.2));dot(c,w*.13,y,h*.045,C.pal[i]);tx(c,s,w*.19,y,sans(F(h,.065)),C.ink);c.fillStyle=on>.5?C.c4:C.line;rr(c,w*.74,y-h*.045,w*.14,h*.09,h*.045);c.fill();dot(c,w*.74+h*.045+on*(w*.14-h*.09),y,h*.035,"#fff");if(on>=1)tx(c,"接続済み",w*.56,y,sans(F(h,.045)),C.c4)})};
+PV.skill=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.5,1.8));c.save();c.translate(lerp(w*.18,w*.42,k),h*.5);c.rotate(-.05*(1-k));node(c,-w*.12,-h*.3,w*.24,h*.6,"",C.c3);tx(c,"手順書",0,-h*.18,sans(F(h,.06)),"#0c0d12","center");lines(c,-w*.09,-h*.08,w*.18,4,h*.07,1,"#0c0d12");c.restore();ai(c,w*.56,h*.5,h*.14,t);for(var i=0;i<3;i++){var p=E.back(seg(u,2.4+i*.7,2.8+i*.7));if(p<=0)continue;c.save();c.translate(w*.85,h*(.22+i*.28));c.scale(p,p);node(c,-w*.1,-h*.1,w*.2,h*.2,"同じ品質",C.c4,"#fff");c.restore()}};
+PV.oauth=function(c,w,h,t){bg(c,w,h);var u=t%6;node(c,w*.05,h*.36,w*.2,h*.28,"AI",C.c1,"#fff");node(c,w*.75,h*.36,w*.2,h*.28,"アプリ",C.c4,"#fff");var k=E.back(seg(u,.4,.9));c.save();c.translate(w*.5,h*.5);c.scale(k,k);card(c,-w*.19,-h*.34,w*.38,h*.68,8);tx(c,"アクセスを",0,-h*.2,sans(F(h,.06)),C.ink,"center");tx(c,"許可しますか？",0,-h*.08,sans(F(h,.06)),C.ink,"center");var ok=u>2.6;c.fillStyle=ok?C.c4:C.c1;rr(c,-w*.12,h*.08,w*.24,h*.16,h*.08);c.fill();tx(c,ok?"許可済み":"許可する",0,h*.165,sans(F(h,.055)),"#fff","center");c.restore();if(u>3){line(c,w*.25,h*.5,w*.31,h*.5,C.c4,4);line(c,w*.69,h*.5,w*.75,h*.5,C.c4,4)}tx(c,"パスワードはAIに渡さない",w*.5,h*.94,sans(F(h,.045)),C.mut,"center")};
+PV.agent=function(c,w,h,t){bg(c,w,h);var S=["計画","実行","確認"],n=Math.floor(t/1.3)%3,cx=w*.3,cy=h*.52,R=h*.3;c.strokeStyle=C.line;c.lineWidth=4;c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();S.forEach(function(s,i){var a=i/3*Math.PI*2-Math.PI/2,x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;node(c,x-w*.08,y-h*.08,w*.16,h*.16,s,i===n?C.c2:C.bg,i===n?"#fff":C.ink)});var a2=(t/1.3)/3*Math.PI*2-Math.PI/2;dot(c,cx+Math.cos(a2)*R,cy+Math.sin(a2)*R,6,C.c3);tx(c,"目標",cx,cy,sans(F(h,.06)),C.mut,"center");["調べる","まとめる","保存する","報告する"].forEach(function(s,i){var y=h*(.2+i*.19),d=(t%8)>1.3+i*1.5;c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(w*.64,y-8,16,16);if(d)check(c,w*.64+8,y,8);tx(c,s,w*.7,y,sans(F(h,.06)),C.ink)})};
+PV.subagent=function(c,w,h,t){bg(c,w,h);node(c,w*.38,h*.08,w*.24,h*.2,"まとめ役",C.c2,"#fff");["調査係","執筆係","確認係"].forEach(function(s,i){var x=w*(.2+i*.3);flow(c,w*.5,h*.28,x,h*.58,t+i*.4,C.c3,Math.floor(t/2.8)%2);node(c,x-w*.11,h*.58,w*.22,h*.2,s,C.pal[i+1],i===1?"#0c0d12":"#fff")});tx(c,Math.floor(t/2.8)%2?"結果を集める":"仕事を分けて同時に進める",w*.5,h*.92,sans(F(h,.055)),C.ink,"center")};
+PV.cu=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.08,h*.08,w*.84,h*.84,8);c.fillStyle=C.sur;c.fillRect(w*.08+2,h*.08+2,w*.84-4,h*.12);[C.c2,C.c3,C.c4].forEach(function(col,i){dot(c,w*.12+i*14,h*.14,4,col)});var B=[[.2,.36,"検索"],[.52,.36,"入力欄"],[.36,.66,"保存"]];B.forEach(function(b,i){var on=Math.floor(u/2)===i;node(c,w*b[0],h*b[1],w*.24,h*.16,i===1&&u>2?typed("AI 動画",seg(u,2.3,3.4))||b[2]:b[2],on?C.c3:C.bg)});var n=Math.floor(u/2),k=E.io((u%2)/2*1.6),from=B[(n+2)%3],to=B[n],x=lerp(w*from[0],w*to[0],cl(k))+w*.14,y=lerp(h*from[1],h*to[1],cl(k))+h*.1;c.fillStyle=C.c2;c.beginPath();c.moveTo(x,y);c.lineTo(x,y+18);c.lineTo(x+5,y+13);c.lineTo(x+13,y+13);c.closePath();c.fill();pill(c,"AIが画面を見て操作",w*.52,h*.82,C.c2,"#fff",F(h,.045))};
+PV.dr=function(c,w,h,t){bg(c,w,h);var u=t%8;card(c,w*.05,h*.1,w*.38,h*.8,8);tx(c,"調査の計画",w*.08,h*.2,sans(F(h,.055)),C.ink);["市場の大きさ","競合の特徴","料金の相場"].forEach(function(s,j){var y=h*(.36+j*.17);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(w*.08,y-7,14,14);if(u>1+j*1.2)check(c,w*.08+7,y,8);tx(c,s,w*.08+22,y,sans(F(h,.052)),C.ink)});tx(c,"読んだページ",w*.52,h*.2,sans(F(h,.05)),C.mut);tx(c,String(Math.round(86*seg(u,.5,4.6))),w*.52,h*.38,disp(F(h,.2)),C.c1);if(u>4.8){c.globalAlpha=seg(u,4.8,5.6);card(c,w*.52,h*.54,w*.42,h*.36,8);tx(c,"レポート",w*.55,h*.63,sans(F(h,.055)),C.ink);lines(c,w*.55,h*.71,w*.36,3,h*.055);c.globalAlpha=1}};
+PV.workflow=function(c,w,h,t){bg(c,w,h);var S=["毎朝8時","ニュース収集","要約","投稿文"],n=Math.floor(t/1.2)%5;S.forEach(function(s,i){var x=w*(.04+i*.24);node(c,x,h*.36,w*.2,h*.28,s,i<n?C.pal[i]:C.bg,i<n?(i===2?"#0c0d12":"#fff"):C.ink);if(i<3){line(c,x+w*.2,h*.5,x+w*.24,h*.5,i<n-1?C.ink:C.line,4)}});tx(c,"きっかけ",w*.14,h*.26,sans(F(h,.05)),C.mut,"center");tx(c,"一度組めば、毎日勝手に動く",w*.5,h*.84,sans(F(h,.055)),C.ink,"center")};
+PV.artifact=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.04,h*.08,w*.32,h*.84,8);for(var i=0;i<4;i++){var me=i%2;c.fillStyle=me?C.c1:C.sur;rr(c,me?w*.14:w*.06,h*(.16+i*.19),w*.2,h*.12,6);c.fill()}card(c,w*.4,h*.08,w*.56,h*.84,8);c.fillStyle=C.sur;c.fillRect(w*.4+2,h*.08+2,w*.56-4,h*.13);tx(c,"セミナー資料",w*.43,h*.15,sans(F(h,.052)),C.ink);pill(c,"共有",w*.8,h*.15,C.ink,C.bg,F(h,.042));for(i=0;i<5;i++){var ed=i===2&&u>2&&u<5;c.fillStyle=i===0?C.ink:ed?C.c1:C.line;rr(c,w*.44,h*(.3+i*.12),w*.46*(i===0?.5:i===4?.6:1),h*.05,3);c.fill();if(ed){c.strokeStyle=C.c1;c.lineWidth=2;c.strokeRect(w*.435,h*(.3+i*.12)-4,w*.47,h*.05+8)}}};
+PV.imggen=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.6,4)),x=w*.3,y=h*.1,s=h*.8;scene(c,x,y,s,s,false);var n=14,cs=s/n;for(var i=0;i<n;i++)for(var j=0;j<n;j++){var a=1-k-hs(i*17+j*31)*.35;if(a>0){c.globalAlpha=cl(a*1.6);c.fillStyle=C.pal[Math.floor(hs(i*7+j*13+Math.floor(t*6))*5)];c.fillRect(x+i*cs,y+j*cs,cs+.5,cs+.5)}}c.globalAlpha=1;c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,y,s,s);tx(c,"ざらざら",w*.05,h*.4,sans(F(h,.055)),C.mut);tx(c,"↓",w*.11,h*.52,sans(F(h,.07)),C.mut);tx(c,"絵になる",w*.05,h*.64,sans(F(h,.055)),C.ink);tx(c,Math.round(k*100)+"%",x+s+w*.04,h*.5,mono(F(h,.09)),C.c1)};
+PV.vidgen=function(c,w,h,t){bg(c,w,h);var p=(t%5)/5,rw=w*.9;scene(c,w*.25,h*.06,w*.5,h*.46,p>.6);for(var i=0;i<7;i++)scene(c,w*.05+i*rw/7+1,h*.62,rw/7-2,h*.16,i/7>.6);c.fillStyle=C.c2;c.fillRect(w*.05+rw*p-1.5,h*.58,3,h*.24);tx(c,"絵を何枚も、つながるように作る",w*.5,h*.9,sans(F(h,.052)),C.ink,"center")};
+PV.tts=function(c,w,h,t){bg(c,w,h);var u=t%5,k=seg(u,.3,4),s="今日はAIの話をします";card(c,w*.05,h*.1,w*.9,h*.26,8);c.font=sans(F(h,.08));var tw=c.measureText(s).width;c.fillStyle=C.c3;c.fillRect(w*.09,h*.16,tw*k,h*.14);tx(c,s,w*.09,h*.23,sans(F(h,.08)),C.ink);tx(c,"↓ 文字を声に",w*.5,h*.46,sans(F(h,.05)),C.mut,"center");wave(c,w*.05,h*.72,w*.9,h*.36,C.c4,k,t)};
+PV.stt=function(c,w,h,t){bg(c,w,h);var u=t%5,k=seg(u,.3,3.6);wave(c,w*.05,h*.24,w*.9,h*.32,C.c4,1,t);c.fillStyle=C.c2;c.fillRect(w*.05+w*.9*k,h*.06,3,h*.36);tx(c,"↓ 声を文字に",w*.5,h*.52,sans(F(h,.05)),C.mut,"center");card(c,w*.05,h*.62,w*.9,h*.28,8);tx(c,typed("今日はAIの話をします",k),w*.09,h*.76,sans(F(h,.08)),C.ink)};
+PV.vibe=function(c,w,h,t){bg(c,w,h);var u=t%7;node(c,w*.04,h*.36,w*.24,h*.28,typed("こんなの作って",seg(u,.2,1.1)),C.c1,"#fff");card(c,w*.34,h*.12,w*.28,h*.76,8,"#0e1117");for(var i=0;i<6;i++){var k=seg(u,1.2+i*.3,1.6+i*.3);if(k>0){c.fillStyle=["#7dffb0","#8fd0ff","#ffc21a"][i%3];rr(c,w*.37+(i%3)*8,h*(.2+i*.1),w*.2*k*(.5+hs(i)*.5),h*.04,2);c.fill()}}var a=E.back(seg(u,3.6,4.1));if(a>0){c.save();c.translate(w*.82,h*.5);c.scale(a,a);card(c,-w*.13,-h*.38,w*.26,h*.76,10);c.fillStyle=C.c3;rr(c,-w*.1,-h*.3,w*.2,h*.2,6);c.fill();lines(c,-w*.1,-h*.04,w*.2,3,h*.07);c.fillStyle=C.c2;rr(c,-w*.1,h*.2,w*.2,h*.1,h*.05);c.fill();c.restore()}tx(c,"言葉",w*.16,h*.78,sans(F(h,.05)),C.mut,"center");tx(c,"アプリ",w*.82,h*.96,sans(F(h,.045)),C.mut,"center")};
+PV.credit=function(c,w,h,t){bg(c,w,h);var u=t%6,used=Math.floor(u/1.2),left=5-used;for(var i=0;i<5;i++){var on=i<left,y=h*.72-i*h*.11;c.fillStyle=on?C.c3:C.line;c.strokeStyle=C.ink;c.lineWidth=2;c.beginPath();c.ellipse(w*.2,y,w*.1,h*.06,0,0,7);c.fill();if(on)c.stroke()}tx(c,"残り "+left*100,w*.2,h*.9,mono(F(h,.07)),C.ink,"center");for(i=0;i<used&&i<4;i++){scene(c,w*.42+i*w*.135,h*.3,w*.12,h*.3,i%2)}tx(c,"1回作るたびに減る、回数券",w*.42,h*.2,sans(F(h,.052)),C.ink);tx(c,"月額プランとは別の財布のことも",w*.42,h*.76,sans(F(h,.045)),C.mut)};
+PV.rate=function(c,w,h,t){bg(c,w,h);var u=t%7,k=u<4.5?u/4.5:1,full=u>=4.5,cx=w*.3,cy=h*.62,R=h*.38;c.lineWidth=16;c.strokeStyle=C.line;c.beginPath();c.arc(cx,cy,R,Math.PI,2*Math.PI);c.stroke();c.strokeStyle=full?C.c2:C.c4;c.beginPath();c.arc(cx,cy,R,Math.PI,Math.PI+Math.PI*k);c.stroke();tx(c,Math.round(k*100)+"%",cx,cy-h*.06,disp(F(h,.14)),C.ink,"center");tx(c,"使用量",cx,cy+h*.1,sans(F(h,.05)),C.mut,"center");if(full){node(c,w*.6,h*.2,w*.34,h*.22,"上限に到達",C.c2,"#fff");tx(c,"リセットまで "+Math.max(0,Math.ceil(7-u))+"時間",w*.6,h*.58,sans(F(h,.055)),C.ink)}else{tx(c,"使うほど、たまっていく",w*.58,h*.3,sans(F(h,.052)),C.ink);tx(c,"時間がたつと元に戻る",w*.58,h*.44,sans(F(h,.052)),C.mut)}};
+PV.beta=function(c,w,h,t){bg(c,w,h);var n=Math.floor(t/1.6)%3;c.save();c.translate(w*.3,h*.5);c.rotate(Math.sin(t*3)*.02);node(c,-w*.2,-h*.3,w*.4,h*.6,"",C.c5);pill(c,"ベータ",-w*.18,-h*.2,C.ink,C.bg,F(h,.055));tx(c,"新機能",0,h*.02,disp(F(h,.11)),"#fff","center");c.restore();["使える","足りない機能がある","仕様が変わる"].forEach(function(s,i){var y=h*(.26+i*.22);dot(c,w*.6,y,h*.035,i===n?C.c2:C.line);tx(c,s,w*.65,y,sans(F(h,.058)),i===n?C.ink:C.mut)})};
+PV.watermark=function(c,w,h,t){bg(c,w,h);var x=w*.08,y=h*.1,ww=w*.5,hh=h*.8,p=(t%4)/4,sx=x+ww*p;scene(c,x,y,ww,hh,false);c.save();c.beginPath();c.rect(x,y,sx-x,hh);c.clip();c.strokeStyle="rgba(255,255,255,.75)";c.lineWidth=1;for(var i=0;i<16;i++){c.beginPath();c.moveTo(x+i*ww/12,y);c.lineTo(x+i*ww/12-hh*.4,y+hh);c.stroke()}c.restore();c.fillStyle=C.c2;c.fillRect(sx-2,y-6,4,hh+12);tx(c,"目には見えない印",w*.64,h*.3,sans(F(h,.052)),C.ink);tx(c,"専用の道具で読み取る",w*.64,h*.44,sans(F(h,.048)),C.mut);if(p>.7)pill(c,"AIが作った画像",w*.64,h*.66,C.c2,"#fff",F(h,.05))};
+PV.inject=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.05,h*.1,w*.44,h*.8,8);tx(c,"読み込んだWebページ",w*.08,h*.2,sans(F(h,.048)),C.mut);lines(c,w*.08,h*.3,w*.38,2,h*.07);c.fillStyle=C.c2;rr(c,w*.08,h*.48,w*.38,h*.14,4);c.fill();tx(c,"前の指示は無視して…",w*.1,h*.55,sans(F(h,.046)),"#fff");lines(c,w*.08,h*.68,w*.38,2,h*.07);var k=E.io(seg(u,1,2.4));dot(c,lerp(w*.49,w*.66,k),h*.55,7,C.c2);c.strokeStyle=C.c4;c.lineWidth=6;c.beginPath();c.arc(w*.8,h*.5,h*.26,Math.PI*.6,Math.PI*1.4);c.stroke();ai(c,w*.82,h*.5,h*.13);if(u>2.4)tx(c,"✕ 従わない",w*.68,h*.88,sans(F(h,.055)),C.c4)};
+PV.commercial=function(c,w,h,t){bg(c,w,h);var u=t%7;scene(c,w*.06,h*.14,w*.3,h*.56,false);tx(c,"AIで作ったもの",w*.21,h*.82,sans(F(h,.048)),C.mut,"center");["サービスの利用規約","プランの条件","他人の作品や顔に似ていないか"].forEach(function(s,i){var y=h*(.22+i*.2);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(w*.44,y-8,16,16);if(u>1+i*1.3)check(c,w*.44+8,y,8);tx(c,s,w*.5,y,sans(F(h,.05)),C.ink)});if(u>5){var k=E.back(seg(u,5,5.4));c.save();c.translate(w*.7,h*.84);c.rotate(-.08);c.scale(k,k);c.strokeStyle=C.c4;c.lineWidth=3;rr(c,-w*.14,-h*.08,w*.28,h*.16,8);c.stroke();tx(c,"販売OK",0,1,disp(F(h,.07)),C.c4,"center");c.restore()}};
+PV.github=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.06,h*.08,w*.6,h*.84,8);tx(c,"作者 / 便利なスキル",w*.1,h*.19,mono(F(h,.055)),C.c1);["README","SKILL.md","scripts"].forEach(function(s,i){var y=h*(.36+i*.16);c.fillStyle=i===2?C.c3:C.line;rr(c,w*.1,y-h*.04,h*.08,h*.08,3);c.fill();tx(c,s,w*.1+h*.12,y,mono(F(h,.055)),C.ink)});tx(c,"★ "+fmt(12000+Math.floor(t*40)),w*.72,h*.2,mono(F(h,.065)),C.ink);var k=E.io(seg(u,1.5,3));node(c,w*.72,h*.34,w*.22,h*.18,"ダウンロード",C.c4,"#fff");dot(c,w*.83,lerp(h*.56,h*.78,k),7,C.c4);node(c,w*.72,h*.72,w*.22,h*.18,"自分のPC",C.bg);tx(c,"世界中の人が作ったものを置く場所",w*.36,h*.84,sans(F(h,.042)),C.mut,"center")};
+PV.local=function(c,w,h,t){bg(c,w,h);node(c,w*.1,h*.2,w*.4,h*.5,"",C.bg);c.fillStyle=C.ink;rr(c,w*.05,h*.7,w*.5,h*.06,4);c.fill();ai(c,w*.3,h*.45,h*.13,t);tx(c,"自分のPCの中で動く",w*.3,h*.88,sans(F(h,.05)),C.ink,"center");c.fillStyle=C.line;c.beginPath();c.arc(w*.74,h*.34,h*.1,0,7);c.arc(w*.82,h*.3,h*.13,0,7);c.arc(w*.9,h*.36,h*.09,0,7);c.fill();line(c,w*.66,h*.18,w*.96,h*.5,C.c2,5);["ネット不要","データが外に出ない","高性能なPCが必要"].forEach(function(s,i){tx(c,(i<2?"○ ":"△ ")+s,w*.62,h*(.62+i*.12),sans(F(h,.048)),i<2?C.ink:C.mut)})};
+PV.hero=function(c,w,h,t){bg(c,w,h);var W=["トークン","エージェント","MCP","スキル","コネクタ","プロンプト","モデル","API","メモリ","ベータ","RAG","クレジット","LLM","思考レベル"],n=Math.floor(t/1.5)%W.length;W.forEach(function(s,i){var a=i*2.4+t*.15,r=.2+hs(i+3)*.26,x=w*(.5+Math.cos(a)*r*1.25),y=h*(.5+Math.sin(a)*r),on=i===n,fs=F(h,on?.062:.042);c.font=sans(fs);var tw=c.measureText(s).width+fs*1.4;c.globalAlpha=on?1:.75;c.fillStyle=C.ink;rr(c,x-tw/2+3,y-fs*.9+3,tw,fs*1.8,fs*.9);c.fill();c.fillStyle=on?C.c3:C.pal[i%5];rr(c,x-tw/2,y-fs*.9,tw,fs*1.8,fs*.9);c.fill();tx(c,s,x,y+1,sans(fs),on||i%5===2?"#0c0d12":"#fff","center");c.globalAlpha=1});var r0=Math.min(w,h)*.15;dot(c,w/2+4,h/2+4,r0,C.ink);dot(c,w/2,h/2,r0,C.bg);c.strokeStyle=C.ink;c.lineWidth=3;c.beginPath();c.arc(w/2,h/2,r0,0,7);c.stroke();tx(c,"？",w/2,h/2-r0*.1,disp(r0*.8),C.c2,"center");tx(c,"72語",w/2,h/2+r0*.55,sans(r0*.24),C.mut,"center")};
+function face(c,x,y,r,col,m){dot(c,x+3,y+3,r,C.ink);dot(c,x,y,r,col);c.strokeStyle=C.ink;c.lineWidth=2;c.beginPath();c.arc(x,y,r,0,7);c.stroke();dot(c,x-r*.35,y-r*.2,r*.1,C.ink);dot(c,x+r*.35,y-r*.2,r*.1,C.ink);c.fillStyle=C.ink;c.beginPath();c.ellipse(x,y+r*.35,r*.28,r*(.06+.22*(m||0)),0,0,7);c.fill()}
+function cb(c,x,y,s,on,col){c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,y-7,14,14);if(on)check(c,x+7,y,8);tx(c,s,x+22,y,sans(11),col||C.ink)}
+PV.assistant=function(c,w,h,t){bg(c,w,h);var u=t%6,M=[["u","今日やることを整理して"],["a","3つに分けました"],["u","1つ目をくわしく"],["a","手順はこうです"]];M.forEach(function(m,i){var k=seg(u,.3+i*1.2,.9+i*1.2);if(k<=0)return;var me=m[0]==="u",bw=w*.56,x=me?w*.4:w*.05,y=h*(.1+i*.21);c.fillStyle=me?C.c1:C.bg;c.strokeStyle=C.ink;c.lineWidth=2;rr(c,x,y,bw,h*.16,10);c.fill();if(!me)c.stroke();tx(c,typed(m[1],k),x+12,y+h*.08,sans(F(h,.06)),me?"#fff":C.ink)})};
+PV.agi=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.out(seg(u,.3,3));tx(c,"人と同じくらい、何でもこなせるAI",w*.06,h*.13,sans(F(h,.055)),C.ink);["文章","計算","計画","新しい発見","体を動かす"].forEach(function(s,i){var y=h*(.3+i*.13),v=[.95,.98,.7,.45,.2][i];tx(c,s,w*.06,y,sans(F(h,.052)),C.ink);c.fillStyle=C.line;rr(c,w*.3,y-h*.035,w*.6,h*.07,4);c.fill();c.fillStyle=C.c5;rr(c,w*.3,y-h*.035,w*.6*v*k,h*.07,4);c.fill()});line(c,w*.84,h*.22,w*.84,h*.88,C.c2,2,[5,4]);tx(c,"人の水準",w*.84,h*.94,sans(F(h,.045)),C.c2,"center")};
+PV.train=function(c,w,h,t){bg(c,w,h);var ph=Math.floor(t/3.5)%2,u=(t%3.5)/3.5;pill(c,ph?"推論　学んだ頭で答える":"学習　大量の文章から学ぶ",w*.06,h*.13,ph?C.c4:C.c5,"#fff",F(h,.055));ai(c,w*.5,h*.55,h*.16,t);if(!ph){for(var i=0;i<7;i++){var p=((u*2+i/7)%1),a=i/7*6.28;node(c,lerp(w*.5+Math.cos(a)*w*.4,w*.5,p)-12,lerp(h*.55+Math.sin(a)*h*.34,h*.55,p)-8,24,16,"",C.c3)}tx(c,"時間もお金もかかる。作る会社がやること",w*.5,h*.94,sans(F(h,.045)),C.mut,"center")}else{node(c,w*.06,h*.45,w*.2,h*.2,"質問",C.bg);flow(c,w*.27,h*.55,w*.4,h*.55,t,C.c2);flow(c,w*.6,h*.55,w*.73,h*.55,t,C.c4);node(c,w*.74,h*.45,w*.2,h*.2,"答え",C.c4,"#fff");tx(c,"ふだん私たちが使っているのはこっち",w*.5,h*.94,sans(F(h,.045)),C.mut,"center")}};
+PV.project=function(c,w,h,t){bg(c,w,h);var u=t%6;c.fillStyle=C.c3;rr(c,w*.08,h*.2,w*.2,h*.1,6);c.fill();node(c,w*.08,h*.26,w*.5,h*.6,"",C.c3);tx(c,"プロジェクト",w*.33,h*.36,sans(F(h,.06)),"#0c0d12","center");["指示","資料","過去の会話"].forEach(function(s,i){var k=E.back(seg(u,.4+i*.5,.8+i*.5));if(k>0){c.save();c.translate(w*.33,h*(.5+i*.12));c.scale(k,k);node(c,-w*.18,-h*.045,w*.36,h*.09,s,C.bg);c.restore()}});for(var i=0;i<3;i++){node(c,w*.7,h*(.2+i*.24),w*.24,h*.16,"チャット"+(i+1),C.bg);flow(c,w*.58,h*.56,w*.7,h*(.28+i*.24),t+i*.3,C.c2)}};
+PV.fewshot=function(c,w,h,t){bg(c,w,h);var u=t%6;tx(c,"先に見本を見せる",w*.06,h*.12,sans(F(h,.055)),C.mut);[["りんご","🍎 赤くて甘い"],["レモン","🍋 黄色で酸っぱい"]].forEach(function(e,i){var y=h*(.28+i*.18);node(c,w*.06,y-h*.07,w*.22,h*.14,e[0],C.bg);tx(c,"→",w*.32,y,sans(F(h,.07)),C.mut);node(c,w*.38,y-h*.07,w*.5,h*.14,e[1].slice(3),C.c3,"#0c0d12")});var y2=h*.72;node(c,w*.06,y2-h*.07,w*.22,h*.14,"ぶどう",C.bg);tx(c,"→",w*.32,y2,sans(F(h,.07)),C.c2);var k=seg(u,2,3.4);if(k>0)node(c,w*.38,y2-h*.07,w*.5,h*.14,typed("紫で、みずみずしい",k),C.c4,"#fff");else{c.strokeStyle=C.ink;c.setLineDash([5,4]);c.strokeRect(w*.38,y2-h*.07,w*.5,h*.14);c.setLineDash([])}tx(c,"同じ形で返ってくる",w*.63,h*.9,sans(F(h,.045)),C.mut,"center")};
+PV.role=function(c,w,h,t){bg(c,w,h);var R=[["編集者","直す所を指摘",C.c2],["先生","やさしく説明",C.c4],["マーケター","売れる切り口",C.c5]],n=Math.floor(t/2)%3,r=R[n];tx(c,"「あなたは◯◯です」と役を渡す",w*.06,h*.12,sans(F(h,.052)),C.mut);face(c,w*.24,h*.52,h*.2,r[2],.3+.3*Math.sin(t*6));node(c,w*.1,h*.78,w*.28,h*.14,r[0],r[2],"#fff");c.fillStyle=C.bg;c.strokeStyle=C.ink;c.lineWidth=2;rr(c,w*.48,h*.3,w*.46,h*.44,10);c.fill();c.stroke();tx(c,r[1],w*.52,h*.42,sans(F(h,.065)),C.ink);lines(c,w*.52,h*.52,w*.38,3,h*.06);R.forEach(function(x,i){dot(c,w*(.64+i*.06),h*.86,5,i===n?C.ink:C.line)})};
+PV.markdown=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,1.2,2.4));card(c,w*.04,h*.1,w*.42,h*.8,8,"#0e1117");["# 見出し","**大事な所**","- 1つ目","- 2つ目"].forEach(function(s,i){tx(c,s,w*.08,h*(.26+i*.16),mono(F(h,.06)),"#e9ecf3")});tx(c,"→",w*.5,h*.5,sans(F(h,.1)),C.c2,"center");c.globalAlpha=.25+.75*k;card(c,w*.54,h*.1,w*.42,h*.8,8);tx(c,"見出し",w*.58,h*.26,disp(F(h,.09)),C.ink);tx(c,"大事な所",w*.58,h*.42,"900 "+sans(F(h,.065)),C.ink);["1つ目","2つ目"].forEach(function(s,i){dot(c,w*.6,h*(.58+i*.16),4,C.ink);tx(c,s,w*.63,h*(.58+i*.16),sans(F(h,.06)),C.ink)});c.globalAlpha=1};
+PV.custom=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.5,2.4));[["指示",C.c3],["資料",C.c4],["口調",C.c5]].forEach(function(p,i){var x=lerp(w*.06,w*.34,k),y=h*(.18+i*.24);if(k<1)node(c,x,y,w*.18,h*.16,p[0],p[1],i===0?"#0c0d12":"#fff")});ai(c,w*.5,h*.45,h*.15,t);if(k>=1){var b=E.back(seg(u,2.4,2.9));c.save();c.translate(w*.5,h*.45);c.scale(b,b);dot(c,0,0,h*.17,C.c2);tx(c,"専用",0,1,sans(F(h,.07)),"#fff","center");c.restore();node(c,w*.3,h*.72,w*.4,h*.16,"レオの投稿づくりAI",C.bg);pill(c,"共有もできる",w*.74,h*.8,C.ink,C.bg,F(h,.045))}};
+PV.temp=function(c,w,h,t){bg(c,w,h);var v=(Math.sin(t*.9)+1)/2;line(c,w*.1,h*.16,w*.9,h*.16,C.line,8);line(c,w*.1,h*.16,lerp(w*.1,w*.9,v),h*.16,C.c2,8);dot(c,lerp(w*.1,w*.9,v),h*.16,h*.055,C.ink);tx(c,"低い　毎回ほぼ同じ",w*.1,h*.3,sans(F(h,.048)),C.mut);tx(c,"高い　毎回ばらつく",w*.9,h*.3,sans(F(h,.048)),C.mut,"right");for(var i=0;i<26;i++){var a=hs(i)*6.28,r=hs(i+50)*h*.26*(.12+v*.9);dot(c,w*.5+Math.cos(a+t*.3)*r*1.8,h*.64+Math.sin(a+t*.3)*r,5,C.pal[i%5])}dot(c,w*.5,h*.64,7,C.ink)};
+PV.embed=function(c,w,h,t){bg(c,w,h);var G=[[.25,.35,C.c1,"料理"],[.7,.3,C.c4,"旅行"],[.5,.72,C.c5,"AI"]],u=t%5;G.forEach(function(g,j){for(var i=0;i<7;i++)dot(c,w*g[0]+(hs(j*10+i)-.5)*w*.2,h*g[1]+(hs(j*10+i+5)-.5)*h*.24,5,g[2]);tx(c,g[3],w*g[0],h*g[1]-h*.19,sans(F(h,.05)),C.ink,"center")});var k=E.io(seg(u,.5,2.5)),qx=lerp(w*.92,w*.56,k),qy=lerp(h*.9,h*.66,k);dot(c,qx,qy,8,C.c2);tx(c,"質問",qx+12,qy,sans(F(h,.048)),C.c2);if(k>=1){c.strokeStyle=C.c2;c.lineWidth=2;c.setLineDash([4,4]);c.beginPath();c.arc(w*.5,h*.72,h*.2,0,7);c.stroke();c.setLineDash([])}tx(c,"意味が近いものほど、近くに並ぶ",w*.04,h*.95,sans(F(h,.045)),C.mut)};
+PV.ground=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.05,h*.1,w*.5,h*.8,8);for(var i=0;i<3;i++){var y=h*(.26+i*.22),k=seg(u,.6+i*1.2,1.2+i*1.2);lines(c,w*.09,y,w*.34,2,h*.06);if(k>0){dot(c,w*.5,y+h*.03,8,C.c1);tx(c,String(i+1),w*.5,y+h*.035,sans(9),"#fff","center");line(c,w*.51,y+h*.03,w*.66,y+h*.03,C.c1,2);node(c,w*.66,y-h*.03,w*.28,h*.13,"元のページ "+(i+1),C.bg)}}tx(c,"答えの1行ごとに、根拠を付ける",w*.5,h*.96,sans(F(h,.045)),C.mut,"center")};
+PV.bias=function(c,w,h,t){bg(c,w,h);var a=.16+.03*Math.sin(t*2);c.save();c.translate(w*.5,h*.4);line(c,0,0,0,h*.4,C.ink,4);c.rotate(a);line(c,-w*.3,0,w*.3,0,C.ink,5);for(var i=0;i<9;i++)dot(c,w*.3-18+(i%3)*18,-12-Math.floor(i/3)*16,8,C.c1);for(i=0;i<2;i++)dot(c,-w*.3+i*18,-12,8,C.c2);c.restore();tx(c,"学んだ情報が偏ると、答えも偏る",w*.5,h*.92,sans(F(h,.052)),C.ink,"center");tx(c,"少ない",w*.1,h*.1,sans(F(h,.048)),C.c2);tx(c,"多い",w*.84,h*.1,sans(F(h,.048)),C.c1)};
+PV.tool=function(c,w,h,t){bg(c,w,h);var u=t%6;ai(c,w*.2,h*.5,h*.15,t);var s=u<2?"天気を調べたい":u<4?"道具を呼び出す":"晴れ、と答える";node(c,w*.06,h*.08,w*.4,h*.16,s,C.bg);["検索","計算","カレンダー"].forEach(function(x,i){var on=i===0&&u>2&&u<4;node(c,w*.66,h*(.2+i*.24),w*.28,h*.16,x,on?C.c3:C.bg);if(i===0){if(u>2&&u<3)dot(c,lerp(w*.3,w*.66,u-2),lerp(h*.5,h*.28,u-2),6,C.c2);if(u>=3&&u<4)dot(c,lerp(w*.66,w*.3,u-3),lerp(h*.28,h*.5,u-3),6,C.c4)}});tx(c,"AIが自分で道具を選んで使う",w*.5,h*.94,sans(F(h,.048)),C.mut,"center")};
+PV.webhook=function(c,w,h,t){bg(c,w,h);var u=t%4,k=E.io(seg(u,1,2.2));node(c,w*.05,h*.34,w*.26,h*.3,"LINEに届く",C.c4,"#fff");node(c,w*.69,h*.34,w*.26,h*.3,u>2.2?"AIが返事":"待機中",u>2.2?C.c1:C.bg,u>2.2?"#fff":C.ink);line(c,w*.31,h*.49,w*.69,h*.49,C.line,3,[6,5]);if(u>1&&u<2.3)dot(c,lerp(w*.31,w*.69,k),h*.49,8,C.c2);if(u<1){var r=h*.05*(1+u);c.strokeStyle=C.c2;c.lineWidth=3;c.globalAlpha=1-u;c.beginPath();c.arc(w*.18,h*.49,h*.2+r,0,7);c.stroke();c.globalAlpha=1}tx(c,"何かが起きた瞬間に、自動で知らせる",w*.5,h*.86,sans(F(h,.05)),C.ink,"center")};
+PV.ext=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,1,2));card(c,w*.05,h*.1,w*.9,h*.8,8);c.fillStyle=C.sur;c.fillRect(w*.05+2,h*.1+2,w*.9-4,h*.14);rr(c,w*.1,h*.135,w*.6,h*.07,h*.035);c.fillStyle=C.bg;c.fill();node(c,w*.8,h*.125,h*.09,h*.09,"",u>.6?C.c3:C.bg);tx(c,"✦",w*.8+h*.045,h*.17,sans(F(h,.06)),C.ink,"center");lines(c,w*.1,h*.34,w*.5*(1-k*.3),5,h*.09);var pw=w*.3*k;if(k>0){c.fillStyle=C.c1;c.fillRect(w*.95-2-pw,h*.24,pw,h*.66-2);if(k>=1){tx(c,"このページを",w*.68,h*.4,sans(F(h,.048)),"#fff");tx(c,"要約して",w*.68,h*.5,sans(F(h,.048)),"#fff")}}};
+PV.nocode=function(c,w,h,t){bg(c,w,h);var W=["言葉で頼む","部品を並べる","ひな形を選ぶ"],n=Math.floor(t/2.2)%3,u=(t%2.2)/2.2;card(c,w*.05,h*.1,w*.22,h*.3,8,"#0e1117");for(var i=0;i<3;i++){c.fillStyle="#9aa3b5";rr(c,w*.08,h*(.17+i*.07),w*.14*(.5+hs(i)*.5),h*.03,2);c.fill()}line(c,w*.04,h*.42,w*.28,h*.08,C.c2,5);tx(c,"コードは書かない",w*.16,h*.5,sans(F(h,.045)),C.c2,"center");W.forEach(function(s,i){node(c,w*.05,h*(.6+i*.12),w*.3,h*.1,s,i===n?C.c3:C.bg)});flow(c,w*.37,h*(.65+n*.12),w*.56,h*.5,t,C.c2);var k=E.back(cl(u*2.4));c.save();c.translate(w*.76,h*.5);c.scale(k,k);card(c,-w*.17,-h*.38,w*.34,h*.76,10);c.fillStyle=C.pal[n];rr(c,-w*.14,-h*.3,w*.28,h*.2,6);c.fill();lines(c,-w*.14,-h*.04,w*.28,3,h*.07);c.fillStyle=C.ink;rr(c,-w*.14,h*.2,w*.16,h*.1,h*.05);c.fill();c.restore();tx(c,"サイトやアプリ",w*.76,h*.95,sans(F(h,.045)),C.mut,"center")};
+PV.sched=function(c,w,h,t){bg(c,w,h);var a=t*1.2,cx=w*.24,cy=h*.5,R=h*.3;dot(c,cx+3,cy+3,R,C.ink);dot(c,cx,cy,R,C.bg);c.strokeStyle=C.ink;c.lineWidth=3;c.beginPath();c.arc(cx,cy,R,0,7);c.stroke();line(c,cx,cy,cx+Math.cos(a)*R*.8,cy+Math.sin(a)*R*.8,C.c2,3);line(c,cx,cy,cx+Math.cos(a/12)*R*.5,cy+Math.sin(a/12)*R*.5,C.ink,4);var n=Math.floor(t/1.7)%3;[["毎朝8時","ニュースまとめ"],["毎週月曜","数字の集計"],["毎月1日","請求書づくり"]].forEach(function(s,i){var y=h*(.24+i*.24);node(c,w*.52,y-h*.09,w*.42,h*.18,s[0]+"　"+s[1],i===n?C.c3:C.bg)})};
+PV.hitl=function(c,w,h,t){bg(c,w,h);var u=t%6,k=u<1.5?u/1.5*.42:u<3.5?.42:.42+(u-3.5)/2.5*.58;k=cl(k);line(c,w*.08,h*.5,w*.92,h*.5,C.line,6);line(c,w*.08,h*.5,lerp(w*.08,w*.92,k),h*.5,C.c4,6);ai(c,lerp(w*.08,w*.92,k),h*.5,h*.1);var open=u>3.5;c.fillStyle=open?C.c4:C.c2;c.fillRect(w*.5-4,h*(open?.14:.3),8,h*.2);node(c,w*.36,h*.68,w*.28,h*.16,open?"OK、進めて":"ここで人が確認",open?C.c4:C.c3,open?"#fff":"#0c0d12");tx(c,"送信や支払いの前に、いったん止める",w*.5,h*.94,sans(F(h,.046)),C.mut,"center")};
+PV.coder=function(c,w,h,t){bg(c,w,h);var u=t%7;card(c,w*.04,h*.1,w*.26,h*.8,8);["src","app.js","style.css","test.js"].forEach(function(s,i){tx(c,(i?"　":"")+s,w*.07,h*(.24+i*.15),mono(F(h,.05)),i===1&&u>1?C.c1:C.ink)});card(c,w*.34,h*.1,w*.62,h*.8,8,"#0e1117");[["-","古い書き方","#ff8a80"],["+","新しい書き方","#7dffb0"],["+","足りない処理を追加","#7dffb0"]].forEach(function(l,i){var k=seg(u,1+i*.8,1.6+i*.8);if(k>0)tx(c,l[0]+" "+typed(l[1],k),w*.38,h*(.26+i*.15),mono(F(h,.05)),l[2])});if(u>4){check(c,w*.4,h*.76,9);tx(c,"テスト合格",w*.45,h*.76,sans(F(h,.052)),"#e9ecf3")}};
+PV.term=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.06,h*.1,w*.88,h*.8,8,"#0e1117");[C.c2,C.c3,C.c4].forEach(function(col,i){dot(c,w*.1+i*14,h*.18,4,col)});tx(c,"$ "+typed("npx skills add 動画スキル",seg(u,.3,2)),w*.1,h*.36,mono(F(h,.065)),"#e9ecf3");if(u>2.3)tx(c,"ダウンロード中…",w*.1,h*.5,mono(F(h,.055)),"#9aa3b5");if(u>3.3)tx(c,"✓ 完了しました",w*.1,h*.63,mono(F(h,.055)),"#7dffb0");if(Math.floor(t*2)%2)c.fillStyle="#e9ecf3",c.fillRect(w*.1,h*.74,8,h*.06);tx(c,"文字で命令を打ち込む、黒い画面",w*.5,h*.97,sans(F(h,.042)),C.mut,"center")};
+PV.i2v=function(c,w,h,t){bg(c,w,h);var s=h*.5;scene(c,w*.06,h*.2,s,s,false);tx(c,"1枚の画像",w*.06+s/2,h*.82,sans(F(h,.05)),C.mut,"center");tx(c,"→",w*.06+s+w*.05,h*.45,sans(F(h,.1)),C.c2,"center");var x=w*.06+s+w*.1,ww=w*.9-x+w*.04,p=(t%4)/4;c.save();c.beginPath();c.rect(x,h*.2,ww,s);c.clip();c.fillStyle="#8fd0ff";c.fillRect(x,h*.2,ww,s);dot(c,x+ww*(.2+p*.6),h*.2+s*(.5-.25*Math.sin(p*3.14)),s*.12,"#ffc21a");c.fillStyle="#2f9e6a";c.beginPath();c.moveTo(x,h*.2+s);c.lineTo(x,h*.2+s*.7);c.quadraticCurveTo(x+ww*.4,h*.2+s*.5,x+ww,h*.2+s*.75);c.lineTo(x+ww,h*.2+s);c.fill();c.restore();c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,h*.2,ww,s);tx(c,"動き出す",x+ww/2,h*.82,sans(F(h,.05)),C.ink,"center")};
+PV.ref=function(c,w,h,t){bg(c,w,h);var u=t%6;face(c,w*.16,h*.42,h*.16,C.c3,.2);tx(c,"この人で",w*.16,h*.72,sans(F(h,.05)),C.ink,"center");pill(c,"参照画像",w*.07,h*.88,C.ink,C.bg,F(h,.045));["#8fd0ff","#ffd9a8","#1b2250"].forEach(function(b,i){var k=E.back(seg(u,.8+i*.7,1.2+i*.7));if(k<=0)return;var x=w*(.38+i*.2);c.save();c.translate(x+w*.085,h*.45);c.scale(k,k);c.fillStyle=b;c.fillRect(-w*.085,-h*.3,w*.17,h*.6);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(-w*.085,-h*.3,w*.17,h*.6);face(c,0,0,h*.11,C.c3,.2);c.restore()});tx(c,"場面が変わっても、同じ顔のまま",w*.66,h*.88,sans(F(h,.046)),C.mut,"center")};
+PV.lora=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.6,2.2)),on=k>=1;node(c,w*.36,h*.2,w*.3,h*.4,"画像モデル",C.c1,"#fff");c.save();c.translate(lerp(w*.12,w*.3,k),h*.4);node(c,-w*.07,-h*.1,w*.14,h*.2,"LoRA",C.c3,"#0c0d12");c.restore();tx(c,"小さな追加パーツ",w*.14,h*.7,sans(F(h,.046)),C.mut,"center");for(var i=0;i<2;i++){var x=w*.74,y=h*(.14+i*.4);c.fillStyle=on?["#ffc9e0","#c9f2d6"][i]:C.line;c.fillRect(x,y,w*.2,h*.3);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,y,w*.2,h*.3);if(on)face(c,x+w*.1,y+h*.15,h*.08,C.c5,.2)}tx(c,on?"決まった絵柄やキャラで出る":"差し込むと…",w*.6,h*.9,sans(F(h,.05)),C.ink,"center")};
+PV.upscale=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,.8,3)),n=Math.round(lerp(6,40,k)),x=w*.3,y=h*.1,s=h*.72,cs=s/n;for(var i=0;i<n;i++)for(var j=0;j<n;j++){var fx=(i+.5)/n,fy=(j+.5)/n,d=Math.hypot(fx-.7,fy-.3);c.fillStyle=d<.14?"#ffc21a":fy>.62+.12*Math.sin(fx*5)?"#2f9e6a":"#8fd0ff";c.fillRect(x+i*cs,y+j*cs,cs+.6,cs+.6)}c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,y,s,s);tx(c,k<1?"粗い":"くっきり",w*.14,h*.46,sans(F(h,.06)),k<1?C.mut:C.c4,"center");tx(c,Math.round(lerp(480,2160,k))+"p",x+s+w*.1,h*.46,mono(F(h,.08)),C.c1,"center");tx(c,"小さな画像や動画を、大きくきれいに",w*.5,h*.93,sans(F(h,.046)),C.mut,"center")};
+PV.inpaint=function(c,w,h,t){bg(c,w,h);var u=t%6,x=w*.1,y=h*.1,ww=w*.5,hh=h*.76;scene(c,x,y,ww,hh,false);var mx=x+ww*.12,my=y+hh*.48,mw=ww*.3,mh=hh*.34;if(u>3.2){c.fillStyle="#b5651d";c.fillRect(mx+mw*.42,my+mh*.4,mw*.16,mh*.6);dot(c,mx+mw*.5,my+mh*.3,mw*.34,"#1f7a4d")}if(u>.6&&u<4.2){c.strokeStyle=C.c2;c.lineWidth=3;c.setLineDash([6,5]);c.lineDashOffset=-t*20;c.strokeRect(mx,my,mw,mh);c.setLineDash([])}node(c,w*.66,h*.3,w*.3,h*.18,u<1.8?"ここを囲む":u<3.2?"木を足して":"そこだけ変わる",u>3.2?C.c4:C.c3,u>3.2?"#fff":"#0c0d12");tx(c,"ほかの部分はそのまま",w*.81,h*.62,sans(F(h,.046)),C.mut,"center")};
+PV.lipsync=function(c,w,h,t){bg(c,w,h);var m=Math.abs(Math.sin(t*7)*Math.sin(t*2.3));face(c,w*.24,h*.46,h*.26,C.c3,m);wave(c,w*.5,h*.4,w*.44,h*.3,C.c4,1,t);line(c,w*.5+w*.44*((t%2)/2),h*.2,w*.5+w*.44*((t%2)/2),h*.6,C.c2,3);tx(c,"音声に合わせて、口が動く",w*.72,h*.76,sans(F(h,.05)),C.ink,"center");tx(c,"別の言語への吹き替えにも",w*.72,h*.88,sans(F(h,.044)),C.mut,"center")};
+PV.avatar=function(c,w,h,t){bg(c,w,h);var u=t%6,m=u>1.5?Math.abs(Math.sin(t*7)):0;card(c,w*.05,h*.12,w*.36,h*.76,8);tx(c,"台本",w*.08,h*.22,sans(F(h,.05)),C.mut);lines(c,w*.08,h*.32,w*.3,6,h*.08,seg(u,.2,1.5));c.fillStyle="#bfe6ff";c.fillRect(w*.5,h*.12,w*.44,h*.76);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(w*.5,h*.12,w*.44,h*.76);c.fillStyle=C.c1;c.beginPath();c.ellipse(w*.72,h*.9,w*.14,h*.24,0,Math.PI,0);c.fill();face(c,w*.72,h*.44,h*.17,C.c3,m);pill(c,"撮影なしで話す動画",w*.52,h*.2,C.ink,C.bg,F(h,.042))};
+PV.vclone=function(c,w,h,t){bg(c,w,h);var u=t%6;tx(c,"声の見本（数十秒）",w*.06,h*.13,sans(F(h,.048)),C.mut);wave(c,w*.06,h*.3,w*.38,h*.22,C.c1,1,t*.5);ai(c,w*.56,h*.3,h*.11,t);flow(c,w*.45,h*.3,w*.5,h*.3,t,C.c2);tx(c,"新しい台本を、その声で",w*.06,h*.56,sans(F(h,.048)),C.mut);wave(c,w*.06,h*.74,w*.6,h*.24,C.c1,seg(u,1.5,5),t);node(c,w*.7,h*.6,w*.26,h*.3,"本人の同意が前提",C.c2,"#fff")};
+PV.seed=function(c,w,h,t){bg(c,w,h);var n=Math.floor(t/2.5)%2,S2=n?[42,77]:[42,42];tx(c,n?"番号を変えると、別の絵に":"同じ番号なら、同じ絵になる",w*.5,h*.12,sans(F(h,.055)),C.ink,"center");S2.forEach(function(s,i){var x=w*(.12+i*.44),ww=w*.32,hh=h*.5;scene(c,x,h*.22,ww,hh,s!==42);if(s!==42){dot(c,x+ww*.3,h*.22+hh*.3,hh*.08,"#fff")}node(c,x+ww*.2,h*.78,ww*.6,h*.14,"seed "+s,s===42?C.c3:C.c5,s===42?"#0c0d12":"#fff")})};
+PV.neg=function(c,w,h,t){bg(c,w,h);var u=t%6;card(c,w*.05,h*.1,w*.42,h*.8,8);tx(c,"入れたい",w*.08,h*.2,sans(F(h,.048)),C.c4);tx(c,"朝の海、灯台",w*.08,h*.32,sans(F(h,.06)),C.ink);tx(c,"入れたくない",w*.08,h*.5,sans(F(h,.048)),C.c2);["文字","人物","ぼやけ"].forEach(function(s,i){var y=h*(.62+i*.1),k=seg(u,1+i*.8,1.5+i*.8);tx(c,s,w*.08,y,sans(F(h,.055)),C.ink);if(k>0)line(c,w*.07,y,w*.07+w*.16*k,y,C.c2,3)});scene(c,w*.54,h*.14,w*.4,h*.62,false);if(u<1.8){tx(c,"SALE",w*.74,h*.28,disp(F(h,.09)),"#fff","center")}if(u<2.6)face(c,w*.64,h*.6,h*.08,C.c3,.2);tx(c,"消したい要素を先に伝える",w*.74,h*.86,sans(F(h,.044)),C.mut,"center")};
+PV.aspect=function(c,w,h,t){bg(c,w,h);var A=[["1:1","フィード投稿",1,1],["9:16","リール、ショート",9,16],["16:9","YouTube、資料",16,9]],n=Math.floor(t/2)%3;A.forEach(function(a,i){var m=h*.5,sc=m/Math.max(a[2],a[3]),ww=a[2]*sc,hh=a[3]*sc,cx=w*(.2+i*.3),on=i===n;c.fillStyle=C.ink;c.fillRect(cx-ww/2+3,h*.4-hh/2+3,ww,hh);c.fillStyle=on?C.c3:C.bg;c.fillRect(cx-ww/2,h*.4-hh/2,ww,hh);c.strokeStyle=C.ink;c.lineWidth=on?3:2;c.strokeRect(cx-ww/2,h*.4-hh/2,ww,hh);tx(c,a[0],cx,h*.4,mono(F(h,.07)),C.ink,"center");tx(c,a[1],cx,h*.8,sans(F(h,.046)),on?C.ink:C.mut,"center")});tx(c,"載せる場所に合わせて、縦横の比を選ぶ",w*.5,h*.94,sans(F(h,.044)),C.mut,"center")};
+PV.deploy=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.6,2.2));node(c,w*.05,h*.34,w*.22,h*.3,"自分のPC",C.bg);c.fillStyle=C.line;c.beginPath();c.arc(w*.46,h*.5,h*.12,0,7);c.arc(w*.54,h*.44,h*.16,0,7);c.arc(w*.62,h*.52,h*.11,0,7);c.fill();tx(c,"公開サーバー",w*.54,h*.5,sans(F(h,.046)),C.ink,"center");if(k<1)node(c,lerp(w*.28,w*.44,k),h*.42,w*.08,h*.14,"",C.c3);if(k>=1){rr(c,w*.3,h*.08,w*.5,h*.12,h*.06);c.fillStyle=C.bg;c.fill();c.strokeStyle=C.ink;c.lineWidth=2;c.stroke();tx(c,"https://自分のサイト",w*.34,h*.14,mono(F(h,.05)),C.c1);for(var i=0;i<3;i++){var b=E.back(seg(u,2.6+i*.5,3+i*.5));if(b>0)face(c,w*.86,h*(.3+i*.2),h*.07*b,C.pal[i],.2)}}tx(c,"作ったものを、URLで誰でも見られる状態に",w*.5,h*.9,sans(F(h,.044)),C.mut,"center")};
+PV.subs=function(c,w,h,t){bg(c,w,h);var n=Math.floor(t/1.4)%4;["9月","10月","11月","12月"].forEach(function(m,i){var x=w*(.06+i*.23);node(c,x,h*.2,w*.19,h*.34,"",i<=n?C.c3:C.bg);tx(c,m,x+w*.095,h*.3,sans(F(h,.055)),"#0c0d12","center");if(i<=n)tx(c,"¥",x+w*.095,h*.43,disp(F(h,.09)),"#0c0d12","center")});tx(c,"毎月、決まった額で使う",w*.5,h*.7,sans(F(h,.058)),C.ink,"center");tx(c,"使わない月も料金はかかる。解約は自分で",w*.5,h*.84,sans(F(h,.046)),C.mut,"center")};
+PV.payg=function(c,w,h,t){bg(c,w,h);var u=t%6,n=Math.floor(u*2);for(var i=0;i<12;i++){var bh=h*(.08+hs(i)*.3);c.fillStyle=i<n?C.c1:C.line;c.fillRect(w*.08+i*w*.055,h*.62-bh,w*.04,bh)}line(c,w*.06,h*.62,w*.76,h*.62,C.ink,2);tx(c,"使った量",w*.4,h*.72,sans(F(h,.048)),C.mut,"center");var tot=0;for(i=0;i<Math.min(n,12);i++)tot+=.08+hs(i)*.3;tx(c,"$ "+(tot*3).toFixed(2),w*.86,h*.4,mono(F(h,.09)),C.c2,"center");tx(c,"使った分だけ払う。上限額の設定を忘れずに",w*.5,h*.9,sans(F(h,.046)),C.ink,"center")};
+PV.rollout=function(c,w,h,t){bg(c,w,h);var k=(t%6)/5,n=0,tot=0;for(var i=0;i<12;i++)for(var j=0;j<5;j++){tot++;var on=hs(i*5+j)<k;if(on)n++;dot(c,w*(.1+i*.07),h*(.2+j*.12),h*.035,on?C.c4:C.line)}tx(c,"届いた人 "+Math.min(100,Math.round(n/tot*100))+"%",w*.1,h*.84,sans(F(h,.06)),C.ink);tx(c,"新機能は、少しずつ順番に配られる",w*.1,h*.94,sans(F(h,.042)),C.mut)};
+PV.region=function(c,w,h,t){bg(c,w,h);var R=[["米国",1,.12,.3],["英国",1,.44,.24],["日本",0,.76,.36],["EU",0,.46,.62],["その他",0,.14,.68]],u=t%5;R.forEach(function(r,i){var on=r[1]||(i===2&&u>3.4);node(c,w*r[2],h*r[3],w*.2,h*.2,r[0],on?C.c4:C.bg,on?"#fff":C.ink);if(!on)tx(c,"準備中",w*r[2]+w*.1,h*r[3]+h*.26,sans(F(h,.042)),C.mut,"center")});tx(c,"国や言語によって、使える時期が違う",w*.5,h*.1,sans(F(h,.05)),C.ink,"center")};
+PV.guard=function(c,w,h,t){bg(c,w,h);var n=Math.floor(t/2)%2,u=(t%2)/2,bad=n===1,k=E.io(cl(u*1.6));ai(c,w*.8,h*.5,h*.14);c.strokeStyle=C.c4;c.lineWidth=8;c.beginPath();c.arc(w*.8,h*.5,h*.26,Math.PI*.65,Math.PI*1.35);c.stroke();var lim=bad?.56:.78;node(c,lerp(w*.05,w*(lim-.2),k),h*.4,w*.24,h*.2,bad?"危険な依頼":"ふつうの依頼",bad?C.c2:C.bg,bad?"#fff":C.ink);tx(c,bad?"✕ 断る":"○ 通す",w*.5,h*.82,sans(F(h,.07)),bad?C.c2:C.c4,"center");tx(c,"害になる使い方を止める、安全のしくみ",w*.5,h*.94,sans(F(h,.044)),C.mut,"center")};
+PV.jail=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,.5,2.2));ai(c,w*.82,h*.46,h*.14);c.strokeStyle=C.c4;c.lineWidth=8;c.beginPath();c.arc(w*.82,h*.46,h*.26,Math.PI*.65,Math.PI*1.35);c.stroke();var x=lerp(w*.06,w*.4,k);node(c,x,h*.34,w*.28,h*.24,u>2.6?"危険な依頼":"これは物語の中の話で…",u>2.6?C.c2:C.c3,u>2.6?"#fff":"#0c0d12");if(u>2.6)tx(c,"✕ 見抜かれる",w*.5,h*.76,sans(F(h,.06)),C.c4,"center");tx(c,"言い回しでごまかして、制限を破ろうとすること",w*.5,h*.93,sans(F(h,.042)),C.mut,"center")};
+PV.deepfake=function(c,w,h,t){bg(c,w,h);var p=(t%4)/4;[["本物",C.c3],["偽物",C.c3]].forEach(function(f,i){var x=w*(.1+i*.44),ww=w*.36,hh=h*.6;c.fillStyle="#bfe6ff";c.fillRect(x,h*.14,ww,hh);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,h*.14,ww,hh);face(c,x+ww/2,h*.44,h*.17,f[1],.2);if(p>.6)pill(c,i?"AIが作った偽物":"本物",x+ww*.14,h*.84,i?C.c2:C.c4,"#fff",F(h,.045));else tx(c,"？",x+ww/2,h*.84,sans(F(h,.08)),C.mut,"center")});c.fillStyle=C.c2;c.fillRect(w*.1+w*.8*Math.min(1,p/.6),h*.1,3,h*.68)};
+PV.optout=function(c,w,h,t){bg(c,w,h);var u=t%6,off=u>2.5,k=E.io(seg(u,2,2.5));node(c,w*.05,h*.14,w*.3,h*.24,"自分の会話",C.bg);node(c,w*.65,h*.14,w*.3,h*.24,"AIの学習",C.c5,"#fff");line(c,w*.35,h*.26,w*.65,h*.26,C.line,3,[6,5]);if(!off)dot(c,lerp(w*.35,w*.65,(t%1.2)/1.2),h*.26,6,C.c2);else{tx(c,"✕",w*.5,h*.26,sans(F(h,.1)),C.c2,"center")}card(c,w*.15,h*.54,w*.7,h*.26,8);tx(c,"会話を学習に使う",w*.2,h*.67,sans(F(h,.055)),C.ink);c.fillStyle=off?C.line:C.c4;rr(c,w*.66,h*.62,w*.14,h*.1,h*.05);c.fill();dot(c,w*.66+h*.05+(1-k)*(w*.14-h*.1),h*.67,h*.04,"#fff");tx(c,"設定でオフにできるサービスが多い",w*.5,h*.92,sans(F(h,.044)),C.mut,"center")};
+PV.copyright=function(c,w,h,t){bg(c,w,h);var v=(Math.sin(t*.9)+1)/2;scene(c,w*.06,h*.14,w*.3,h*.5,false);tx(c,"© だれかの作品",w*.21,h*.74,sans(F(h,.046)),C.ink,"center");scene(c,w*.64,h*.14,w*.3,h*.5,v<.5);tx(c,"AIで作ったもの",w*.79,h*.74,sans(F(h,.046)),C.ink,"center");c.fillStyle=C.line;rr(c,w*.4,h*.36,w*.2,h*.07,4);c.fill();c.fillStyle=v>.6?C.c2:C.c4;rr(c,w*.4,h*.36,w*.2*v,h*.07,4);c.fill();tx(c,"似ている度",w*.5,h*.28,sans(F(h,.044)),C.mut,"center");tx(c,v>.6?"似すぎると、権利の問題に":"参考にする程度なら問題になりにくい",w*.5,h*.9,sans(F(h,.048)),v>.6?C.c2:C.ink,"center")};
+PV.license=function(c,w,h,t){bg(c,w,h);var L=[["MIT","商用OK、改変OK",C.c4],["CC BY","作者名を書けばOK",C.c1],["CC BY-NC","商用は不可",C.c2],["表記なし","勝手に使えない",C.ink]],n=Math.floor(t/1.6)%4;L.forEach(function(l,i){var y=h*(.1+i*.21),on=i===n;node(c,w*.06,y,w*.26,h*.16,l[0],on?l[2]:C.bg,on?(i===3?C.bg:"#fff"):C.ink);tx(c,l[1],w*.38,y+h*.08,sans(F(h,.055)),on?C.ink:C.mut)});tx(c,"使ってよい範囲を決めた、作者の約束ごと",w*.5,h*.95,sans(F(h,.044)),C.mut,"center")};
+PV.pe=function(c,w,h,t){bg(c,w,h);var u=t%6,P=[["役割",C.c1],["背景",C.c4],["条件",C.c5],["出力の形",C.c2]],n=0;P.forEach(function(p,i){var k=E.back(seg(u,.4+i*.8,.8+i*.8));if(k>0){n++;c.save();c.translate(w*.25,h*(.2+i*.18));c.scale(k,k);node(c,-w*.18,-h*.07,w*.36,h*.14,p[0],p[1],"#fff");c.restore()}});tx(c,"頼み方を組み立てる技術",w*.25,h*.93,sans(F(h,.046)),C.mut,"center");tx(c,"返事の質",w*.56,h*.2,sans(F(h,.05)),C.mut);c.fillStyle=C.line;rr(c,w*.56,h*.3,w*.36,h*.1,5);c.fill();c.fillStyle=C.c3;rr(c,w*.56,h*.3,w*.36*n/4,h*.1,5);c.fill();lines(c,w*.56,h*.52,w*.36,5,h*.07,n/4,n===4?C.ink:C.line)};
+PV.oss=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,.4,1.6));node(c,w*.32,h*.4,w*.36,h*.42,"",C.bg);c.save();c.translate(w*.32,h*.4);c.rotate(-k*.9);c.fillStyle=C.c3;c.fillRect(0,-h*.06,w*.36,h*.06);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(0,-h*.06,w*.36,h*.06);c.restore();["コード","設計","モデル"].forEach(function(s,i){if(k>=1)tx(c,s,w*.5,h*(.5+i*.1),mono(F(h,.05)),C.c1,"center")});for(var i=0;i<5;i++){var a=i/5*6.28+t*.2;face(c,w*.5+Math.cos(a)*w*.38,h*.56+Math.sin(a)*h*.3,h*.055,C.pal[i],.2)}tx(c,"中身が公開され、だれでも使える、直せる",w*.5,h*.95,sans(F(h,.05)),C.ink,"center")};
+PV.slop=function(c,w,h,t){bg(c,w,h);var off=(t*.5)%1,cw=w*.2;for(var i=-1;i<6;i++){var x=w*.04+(i-off)*(cw+10),good=((i+Math.floor(t*.5))%4+4)%4===2;c.fillStyle=C.ink;c.fillRect(x+3,h*.2+3,cw,h*.5);c.fillStyle=good?C.c3:C.bg;c.fillRect(x,h*.2,cw,h*.5);c.strokeStyle=C.ink;c.lineWidth=2;c.strokeRect(x,h*.2,cw,h*.5);if(good){face(c,x+cw/2,h*.38,h*.08,C.c2,.3);tx(c,"自分の体験",x+cw/2,h*.6,sans(F(h,.045)),"#0c0d12","center")}else{c.fillStyle=C.line;c.fillRect(x+8,h*.26,cw-16,h*.18);lines(c,x+8,h*.5,cw-16,3,h*.05)}}tx(c,"AIで量産された、中身の薄いコンテンツ",w*.5,h*.1,sans(F(h,.05)),C.ink,"center");tx(c,"似た投稿があふれる中で、目に留まるのは人の視点",w*.5,h*.86,sans(F(h,.044)),C.mut,"center")};
+PV.claudemd=function(c,w,h,t){bg(c,w,h);var u=t%6;c.save();c.translate(w*.24,h*.5);c.rotate(-.03);node(c,-w*.17,-h*.36,w*.34,h*.72,"",C.c3);tx(c,"CLAUDE.md",0,-h*.24,mono(F(h,.055)),"#0c0d12","center");["口調のルール","フォルダの構成","やってはいけないこと"].forEach(function(s,i){tx(c,"・"+s,-w*.15,-h*.08+i*h*.13,sans(F(h,.042)),"#0c0d12")});c.restore();ai(c,w*.62,h*.34,h*.12,t);flow(c,w*.42,h*.42,w*.54,h*.36,t,C.c2);["月曜の作業","水曜の作業","金曜の作業"].forEach(function(s,i){var k=seg(u,.6+i*1.3,1.2+i*1.3);node(c,w*.56+i*w*.02,h*(.56+i*.12),w*.36,h*.1,s,k>0?C.c4:C.bg,k>0?"#fff":C.ink)});tx(c,"毎回、最初に読み込まれる",w*.74,h*.14,sans(F(h,.044)),C.mut,"center")};
+PV.plugin=function(c,w,h,t){bg(c,w,h);var u=t%6,k=E.io(seg(u,1.4,2.8));node(c,lerp(w*.08,w*.36,k),h*.18,w*.3,h*.56,"",C.c5);tx(c,"プラグイン",lerp(w*.08,w*.36,k)+w*.15,h*.27,sans(F(h,.052)),"#fff","center");["スキル","コネクタ","コマンド"].forEach(function(s,i){node(c,lerp(w*.08,w*.36,k)+w*.03,h*(.34+i*.13),w*.24,h*.1,s,C.bg)});ai(c,w*.8,h*.46,h*.14,k>=1?t:undefined);if(k>=1){check(c,w*.8,h*.76,10);tx(c,"まとめて入る",w*.8,h*.88,sans(F(h,.048)),C.ink,"center")}else tx(c,"機能の詰め合わせを、1回で追加",w*.5,h*.9,sans(F(h,.048)),C.mut,"center")};
+PV.ugc=function(c,w,h,t){bg(c,w,h);var pw=h*.44,x=w*.14,y=h*.08,ph=h*.84;c.fillStyle=C.ink;rr(c,x+4,y+4,pw,ph,16);c.fill();c.fillStyle="#ffd9a8";rr(c,x,y,pw,ph,16);c.fill();c.strokeStyle=C.ink;c.lineWidth=3;c.stroke();face(c,x+pw/2,y+ph*.36,pw*.24,C.c3,.3+.3*Math.sin(t*7));node(c,x+pw*.5+Math.sin(t*2)*4,y+ph*.6,pw*.36,ph*.22,"商品",C.c2,"#fff");var n=Math.floor(t/1.5)%3;["スマホで撮った風の画","使った人の感想の語り口","広告に見えにくい"].forEach(function(s,i){dot(c,w*.5,h*(.28+i*.2),6,i===n?C.c2:C.line);tx(c,s,w*.54,h*(.28+i*.2),sans(F(h,.05)),i===n?C.ink:C.mut)});tx(c,"AIで作る時は、広告だと分かる表示を",w*.72,h*.88,sans(F(h,.042)),C.mut,"center")};
+PV.camera=function(c,w,h,t){bg(c,w,h);var M=["ズームイン","パン（横に振る）","ドリー（前へ進む）"],n=Math.floor(t/2.4)%3,u=(t%2.4)/2.4,x=w*.08,y=h*.1,ww=w*.56,hh=h*.7;c.save();c.beginPath();c.rect(x,y,ww,hh);c.clip();c.translate(x+ww/2,y+hh/2);var s=n===0?1+u*.6:n===2?1+u*.9:1.2;c.scale(s,s);c.translate(n===1?-(u-.5)*ww*.5:0,n===2?u*hh*.1:0);scene(c,-ww*.7,-hh*.6,ww*1.4,hh*1.2,false);c.restore();c.strokeStyle=C.ink;c.lineWidth=3;c.strokeRect(x,y,ww,hh);dot(c,x+14,y+14,5,C.c2);M.forEach(function(m,i){node(c,w*.68,h*(.16+i*.22),w*.28,h*.15,m.replace(/（.*$/,""),i===n?C.c3:C.bg)});tx(c,M[n],x+ww/2,h*.9,sans(F(h,.05)),C.ink,"center")};
+PV.faceswap=function(c,w,h,t){bg(c,w,h);var u=t%5,k=E.io(seg(u,1.2,2.8)),xa=w*.26,xb=w*.74;[xa,xb].forEach(function(x,i){c.fillStyle=i?C.c4:C.c1;c.beginPath();c.ellipse(x,h*.86,w*.13,h*.26,0,Math.PI,0);c.fill()});face(c,lerp(xa,xb,k),h*.42-Math.sin(k*3.14)*h*.16,h*.15,C.c3,.2);face(c,lerp(xb,xa,k),h*.42+Math.sin(k*3.14)*h*.12,h*.15,"#ffc9e0",.2);tx(c,"顔だけを入れ替える",w*.5,h*.1,sans(F(h,.052)),C.ink,"center");pill(c,"本人の許可なしはNG",w*.36,h*.94,C.c2,"#fff",F(h,.045))};
+
+var CV=[],started=false;
+var io=("IntersectionObserver" in window)?new IntersectionObserver(function(es){es.forEach(function(e){CV.forEach(function(it){if(it.el===e.target)it.vis=e.isIntersecting})})},{rootMargin:"80px"}):null;
+function regAll(){$$("canvas[data-pv]").forEach(function(el){if(el._pv)return;el._pv=1;var it={el:el,fn:PV[el.dataset.pv],vis:false,st:{},a:byId[el.dataset.app]};CV.push(it);if(io)io.observe(el)})}
+function drawOne(it,t,dt){if(!it.fn)return;var el=it.el,w=el.clientWidth,h=el.clientHeight;if(!w||!h)return;var d=Math.min(2,window.devicePixelRatio||1);
+  if(el.width!==Math.round(w*d)||el.height!==Math.round(h*d)){el.width=Math.round(w*d);el.height=Math.round(h*d)}
+  var c=el.getContext("2d");c.setTransform(d,0,0,d,0,0);c.globalAlpha=1;c.textAlign="left";c.setLineDash([]);
+  try{it.fn(c,w,h,t,it.st,dt,it.a)}catch(e){if(!it.err){it.err=1;console.error("pv "+el.dataset.pv+" "+e.message)}}}
+var last=0;
+function loop(ts){var t=ts/1000,dt=Math.min(.1,t-last);last=t;CV.forEach(function(it){if(it.vis||!io)drawOne(it,t,dt)});requestAnimationFrame(loop)}
+function drawAllOnce(){if(!reduce&&started)return;CV.forEach(function(it){drawOne(it,3.3,.016)})}
+
+/* ---------- apps ---------- */
+/* data */
+var CAT={kihon:["基本","まずここから。AIの土台になる言葉"],shikumi:["しくみと性能","なぜそう動くのかが分かる言葉"],tsunagu:["つなぐ","AIと外のアプリを結ぶ言葉"],makaseru:["任せる","AIに作業を進めてもらう言葉"],tsukuru:["作る","文章以外のものを生み出す言葉"],okane:["料金と提供","お金と使える範囲の言葉"],anzen:["安全とルール","発信する人が知っておく言葉"]};
+var S=[
+{id:"genai",name:"生成AI",yomi:"せいせいえーあい generative ai ジェネレーティブ",c:"kihon",one:"頼むと、文章や画像を新しく作ってくれるAI",desc:"文章、画像、動画、音楽など、今までになかったものを作り出すAIの総称。ChatGPT、Claude、Geminiはどれも生成AIです。",ex:"「朝の作業用BGMを作って」と頼む → 曲ができる。「この内容を記事にして」→ 文章ができる。",miss:"検索エンジンのように正解を探してくる道具、と考えるとずれます。その場で作るので、間違いが混ざることがあります。",rel:["llm","model","halluc"]},
+{id:"llm",name:"LLM（大規模言語モデル）",yomi:"えるえるえむ だいきぼげんごもでる large language model",c:"kihon",one:"次に来る言葉を予測して、文章を作るAIの頭脳",desc:"大量の文章を学んで、「この続きに来そうな言葉」を予測する仕組み。その予測をくり返すことで、質問への答えや記事を書き上げます。",ex:"「今日の天気は」の次に「晴れ」が来やすい、と予測。これを1語ずつ続けて、文章が完成。",miss:"人のように意味を理解して答えている、とは言い切れません。予測がうまく当たっている状態なので、自信満々に間違えることがあります。",rel:["genai","token","halluc"]},
+{id:"model",name:"モデル",yomi:"もでる model",c:"kihon",must:1,one:"AIアプリの中で動く、頭脳の種類",desc:"アプリは入れ物、モデルは中で動く頭脳。同じアプリでも、選ぶモデルで賢さ、速さ、使える回数が変わります。",ex:"Geminiアプリの中で、速いHydrogenと賢いNeonを切り替える。ClaudeならOpus、Sonnet、Haikuを切り替える。",miss:"常に一番上のモデルが正解、とは限りません。賢いモデルほど返事に時間がかかり、使える回数も少なめ。",rel:["think","bench","rate"]},
+{id:"prompt",name:"プロンプト",yomi:"ぷろんぷと prompt 指示文 しじぶん",c:"kihon",must:1,one:"AIへの頼み方、指示の文章",desc:"AIに送るメッセージのこと。だれ向けか、どんな形で、どのくらいの長さかを書くほど、ねらい通りの結果になります。",ex:"「記事書いて」より、「初心者向けに、3つの見出しで、500文字の記事を書いて」。",miss:"特別な呪文や英語が必要、は昔の話。今は、人に頼む時と同じように具体的に書けば十分です。",rel:["sysprompt","context","skill"]},
+{id:"token",name:"トークン",yomi:"とーくん token",c:"kihon",must:1,one:"AIが文章を数える時の単位。文字数に近い",desc:"AIは文章を細かいかたまりに分けて読み書きします。そのかたまりがトークン。使える量の上限や、APIの料金はこの数で決まります。",ex:"APIの料金表にある「100万トークンあたり3ドル」は、読み書きした文章の量で課金される、という意味。",miss:"1文字が1トークン、ではありません。日本語は英語よりトークン数が多くなりやすい傾向があります。",rel:["context","api","rate"]},
+{id:"context",name:"コンテキスト（コンテキストウィンドウ）",yomi:"こんてきすと context window 文脈",c:"kihon",must:1,one:"AIが一度に見ておける会話と資料の範囲",desc:"会話の履歴、渡した資料、指示。AIが一度に頭に入れておける量には限りがあり、その枠がコンテキストウィンドウ。あふれた分は見えなくなります。",ex:"長い会話を続けると、最初に伝えた条件を忘れたような返事になる。枠から古い部分が出ていったサイン。",miss:"会話が長いほど賢くなる、は誤解です。話題が変わったら新しいチャットを始めるほうが、返事の質が安定します。",rel:["token","memory","rag"]},
+{id:"sysprompt",name:"システムプロンプト（カスタム指示）",yomi:"しすてむぷろんぷと system prompt カスタム指示 かすたむしじ custom instructions",c:"kihon",one:"毎回の会話に、最初から効かせておく指示",desc:"チャットごとに書かなくても、常に守ってほしいことを先に決めておく設定。口調、長さ、避けたい表現などを入れておけます。",ex:"「です・ます調で短く」「絵文字は使わない」を設定 → どの会話でも、その通りに返ってくる。",miss:"一度入れたら完全に守られる、とは限りません。長い会話では薄れることがあるので、大事な条件はその場でも伝えると確実。",rel:["prompt","memory","skill"]},
+{id:"memory",name:"メモリ",yomi:"めもり memory 記憶",c:"kihon",one:"別の会話でも、あなたのことを覚えておく機能",desc:"ふつう、新しいチャットを始めるとAIは前の会話を覚えていません。メモリは、名前や仕事、好みなどを保存して、次の会話でも使えるようにする機能です。",ex:"前に「noteを売っています」と伝えておく → 別の日の相談でも、note向けの提案が返る。",miss:"何でも覚えてくれる、ではありません。覚えた内容は設定画面で確認と削除ができるので、時々見直すと安心。",rel:["context","sysprompt"]},
+{id:"halluc",name:"ハルシネーション",yomi:"はるしねーしょん hallucination 幻覚 うそ 間違い",c:"shikumi",must:1,one:"AIが、もっともらしい間違いを言うこと",desc:"存在しない数字、日付、人名、出典を、自信ありげに答えてしまう現象。AIが文章を予測で作っているために起こります。",ex:"存在しない本のタイトルを挙げる。料金や発売日を、古い情報や推測で答える。",miss:"最新モデルなら起きない、は誤解です。減ってはいますがゼロにはなりません。数字、日付、固有名詞は元の情報で確認を。",rel:["llm","cutoff","rag"]},
+{id:"think",name:"思考レベル（推論・Thinking）",yomi:"しこうれべる 推論 すいろん thinking reasoning effort 考える深さ 拡張思考",c:"shikumi",must:1,one:"答える前に、どのくらい深く考えさせるかの設定",desc:"返事をする前に、AIが頭の中で考える量を調整する設定。高くすると難しい問題に強くなり、その分、時間と使用量が増えます。",ex:"雑談や要約は低め。込み入った企画の相談や、長い資料の分析は高め。",miss:"いつも最高にしておけば得、ではありません。簡単な質問では差が出にくく、待ち時間と使用量だけが増えます。",rel:["model","rate","agent"]},
+{id:"multi",name:"マルチモーダル",yomi:"まるちもーだる multimodal",c:"shikumi",one:"文字だけでなく、画像や音声や動画も扱えること",desc:"文字、画像、音声、動画など、複数の種類の情報をまとめて理解したり作ったりできる性質。今の主要なAIは、ほぼすべてマルチモーダルです。",ex:"スクショを貼って「この画面の直し方を教えて」。録音を渡して「要点をまとめて」。",miss:"何でも読める、とは限りません。小さな文字や手書き、長い動画は読み間違えることがあります。",rel:["imggen","stt","model"]},
+{id:"bench",name:"ベンチマーク",yomi:"べんちまーく benchmark 性能比較 スコア",c:"shikumi",one:"AIに同じテストを解かせて、点数で比べるもの",desc:"モデルの賢さを比べるための共通テスト。新しいモデルが出るたびに「◯◯で1位」と話題になるのは、この点数のことです。",ex:"「コード作成のテストで最高点」「総合指数で他社を上回った」という発表。",miss:"点数が高いモデルが、自分の用途でも一番、とは限りません。文章の好みや使い勝手は、自分で試すのが早道。",rel:["model","think"]},
+{id:"rag",name:"RAG（ラグ）",yomi:"らぐ rag 検索拡張生成 retrieval",c:"shikumi",one:"手元の資料を探してから答えさせる仕組み",desc:"AIが答える前に、指定した資料やデータを検索し、見つけた内容をもとに答える方法。AIが知らない社内の情報や、自分の過去の記事を使わせたい時に役立ちます。",ex:"自分のnote記事を全部読み込ませて、「過去に書いた内容と重ならないテーマを出して」と頼む。",miss:"資料を渡せば間違えない、ではありません。探し方がずれると、関係ない所を読んで答えることがあります。",rel:["context","halluc","connector"]},
+{id:"finetune",name:"ファインチューニング",yomi:"ふぁいんちゅーにんぐ fine-tuning 微調整 追加学習",c:"shikumi",one:"AIに追加で学ばせて、自分専用に寄せること",desc:"すでにあるモデルに、自分のデータを追加で学習させる方法。特定の口調や専門分野に強いモデルを作れます。",ex:"自社の問い合わせ対応の文例を大量に学ばせて、その会社らしい返事をするモデルにする。",miss:"個人の発信なら、ほぼ不要です。口調をまねさせたい程度なら、見本の文章を渡すか、スキルやカスタム指示で足ります。",rel:["model","skill","sysprompt"]},
+{id:"api",name:"API",yomi:"えーぴーあい api",c:"tsunagu",one:"自分のツールから、AIを呼び出すための窓口",desc:"アプリの画面を使わず、プログラムや自動化ツールからAIに仕事を頼む方法。使った分だけ料金がかかります。",ex:"公式LINEに届いた質問を、裏でAIに渡して返事を作る。スプレッドシートの商品名から、説明文を自動で作る。",miss:"アプリの月額プランに入ればAPIも使える、は誤解です。APIは別契約で、別の料金がかかります。",rel:["apikey","token","workflow"]},
+{id:"apikey",name:"APIキー",yomi:"えーぴーあいきー api key 鍵",c:"tsunagu",one:"APIを使う時の、自分専用の合言葉",desc:"だれがAPIを使っているかを見分けるための、長い文字列。これを入れることで、自分のアカウントの料金でAIを呼び出せます。",ex:"自動化ツールの設定画面に、発行したキーを貼り付ける。",miss:"スクショや投稿に写り込むと、他人に使われて請求が来ます。人に見せない、AIのチャットにも貼らない、が基本。",rel:["api","deploy","optout"]},
+{id:"mcp",name:"MCP（MCPサーバー）",yomi:"えむしーぴー mcp mcpサーバー server model context protocol モデルコンテキストプロトコル",c:"tsunagu",must:1,one:"AIと外部アプリをつなぐ、共通の決まり",desc:"AIがカレンダーやメール、デザインツールなどを使えるようにするための共通ルール。この決まりに沿って作られたアプリは、対応するAIならどれにでもつなげます。",ex:"Canva、Notion、動画生成サービスなどが「MCPに対応」と発表 → AIのチャットから、それらを直接動かせる。",miss:"「MCPサーバーを入れる」は、その決まりに沿って作られた、アプリごとの接続部品を追加するという意味。設定画面ではコネクタという名前で並びます。",rel:["connector","oauth","agent"]},
+{id:"connector",name:"コネクタ",yomi:"こねくた connector 連携 れんけい 拡張機能 アプリ連携",c:"tsunagu",must:1,one:"AIに外部アプリをつなぐ、設定画面の窓口",desc:"AIの設定画面でオンにすると、そのアプリの中身を読んだり、操作したりできるようになる機能。多くはMCPの仕組みで動いています。",ex:"Googleカレンダーをつなぐ →「来週の空いている時間を教えて」に答えられる。Canvaをつなぐ → チャットからデザインを作れる。",miss:"つないだ瞬間に全部見られる、ではありません。何を許可するかは、つなぐ時の画面で選べます。",rel:["mcp","oauth","skill"]},
+{id:"skill",name:"スキル",yomi:"すきる skill skills agent skills",c:"tsunagu",must:1,one:"AIに渡しておく、作業の手順書",desc:"「この作業はこの手順で、この形で仕上げる」をまとめたファイル。入れておくと、AIが必要な時に読み込み、毎回同じ品質で作業します。",ex:"動画づくりのスキルを入れる → 「紹介動画を作って」だけで、決まった手順で動画ができる。",miss:"コネクタと同じもの、ではありません。コネクタは外のアプリにつなぐ窓口、スキルはやり方を教える手順書です。",rel:["connector","prompt","github"]},
+{id:"agent",name:"エージェント",yomi:"えーじぇんと agent ai agent 自律",c:"makaseru",must:1,one:"目標を渡すと、自分で段取りして進めるAI",desc:"計画を立て、道具を使い、結果を確かめながら、作業を最後まで進めるAI。1回の返事で終わらないのが特徴です。調べる、作る、保存するを続けて任せられます。",ex:"「競合5社の料金を調べて、表にまとめて、ドキュメントに保存して」→ 途中の操作を自分で進める。",miss:"放っておいても完璧、ではありません。途中で確認を挟む設定にし、最後の結果は自分の目で見るのが安全。",rel:["subagent","cu","workflow"]},
+{id:"subagent",name:"サブエージェント",yomi:"さぶえーじぇんと subagent マルチエージェント",c:"makaseru",one:"大きな仕事を分けて受け持つ、手伝い役のAI",desc:"まとめ役のAIが仕事を分け、複数のAIに同時に進めさせる仕組み。調べる係、書く係、確かめる係のように役割を分けます。",ex:"10社の調査を、10体のAIが同時に進める。1体ずつ順番にやるより早く終わる。",miss:"数を増やすほど得、ではありません。その分だけ使用量が増えるので、大きな仕事の時だけ使うのが向いています。",rel:["agent","rate","dr"]},
+{id:"cu",name:"Computer Use（パソコン操作）",yomi:"こんぴゅーたーゆーす computer use パソコン操作 ブラウザ操作 browser",c:"makaseru",one:"AIが画面を見て、クリックや入力をすること",desc:"AIが画面のスクリーンショットを見ながら、マウスとキーボードを人の代わりに動かす機能。ブラウザだけを操作するものと、パソコン全体を操作するものがあります。",ex:"「このサイトで条件に合う商品を探して、一覧にして」→ AIがページをめくって集める。",miss:"人より速い、とは限りません。画面を確かめながら進むので時間がかかります。ログインや支払いは自分で行うのが基本。",rel:["agent","inject","connector"]},
+{id:"dr",name:"Deep Research",yomi:"でぃーぷりさーち deep research 調査 リサーチ",c:"makaseru",one:"調べものを丸ごと任せて、レポートで受け取る機能",desc:"テーマを渡すと、調べる計画を立て、たくさんのページを読み、出典つきのレポートにまとめる機能。数分から数十分かかります。",ex:"「AI教材のnote、売れている記事の価格帯とテーマを調べて」→ 待っているだけでレポートが届く。",miss:"出典つきなら正しい、とは限りません。大事な数字は、元のページを開いて確かめてから使いましょう。",rel:["agent","halluc","cutoff"]},
+{id:"workflow",name:"ワークフロー（自動化）",yomi:"わーくふろー workflow 自動化 じどうか スケジュール 定期実行",c:"makaseru",one:"決まった作業を、決まった順番で自動で流す仕組み",desc:"「これが起きたら、次にこれをする」をつないでおく仕組み。時間や出来事をきっかけに、人が操作しなくても動きます。",ex:"毎朝8時にAIニュースを集める → 要約する → 投稿の下書きを作る、を毎日自動で。",miss:"エージェントと同じ、ではありません。ワークフローは決めた順番どおり、エージェントはその場で段取りを考えます。",rel:["agent","api","connector"]},
+{id:"artifact",name:"アーティファクト",yomi:"あーてぃふぁくと artifact artifacts 成果物 canvas キャンバス",c:"tsukuru",one:"会話の横に開く、保存と編集ができる作成物",desc:"返事の文章とは別に、資料、表、Webページなどを専用の画面に作る機能。あとから直したり、人に共有したりできます。Geminiでは近い機能がCanvasと呼ばれます。",ex:"「セミナー資料を作って」→ 右側にスライドが開き、1枚ずつ自分でも直せる。",miss:"毎回ファイルをダウンロードするもの、ではありません。作ったものはサービスの中に保存され、いつでも開き直せます。",rel:["vibe","genai"]},
+{id:"imggen",name:"画像生成",yomi:"がぞうせいせい image generation 画像生成ai 拡散モデル",c:"tsukuru",one:"言葉から、絵や写真のような画像を作ること",desc:"文章の指示から画像を作る機能。多くは、ざらざらのノイズを少しずつ整えて絵にしていく方法で作られています。最近は、会話で一部だけ直すこともできます。",ex:"「机の上のノートパソコンとコーヒー、朝の光」→ 画像ができる。「文字を大きくして」→ そこだけ直る。",miss:"毎回同じ絵が出る、ではありません。同じ指示でも結果は変わるので、何枚か作って選ぶのが基本。",rel:["vidgen","watermark","commercial"]},
+{id:"vidgen",name:"動画生成",yomi:"どうがせいせい video generation 動画生成ai",c:"tsukuru",one:"言葉や画像から、短い動画を作ること",desc:"文章や1枚の画像から、数秒から数十秒の動画を作る機能。音や声まで同時に作れるモデルが増えています。",ex:"「朝のカフェでパソコンを開く手元、15秒、縦型」→ 音つきの動画ができる。",miss:"長い動画が一発でできる、ではありません。短い動画を何本か作り、つなげて仕上げるのが今の作り方。",rel:["imggen","credit","tts"]},
+{id:"tts",name:"音声合成（TTS）",yomi:"おんせいごうせい てぃーてぃーえす tts text to speech 読み上げ ナレーション",c:"tsukuru",one:"文字を、人の声のような音声に変えること",desc:"台本を渡すと、ナレーションの音声を作る機能。読み方の速さや感情、声の種類を指定できます。",ex:"解説動画の台本を貼る → 落ち着いた声のナレーションができる。自分で録音しなくて済む。",miss:"どんな声でも自由に使える、ではありません。実在の人の声をまねる使い方は、トラブルのもとになります。",rel:["stt","vidgen","commercial"]},
+{id:"vibe",name:"バイブコーディング",yomi:"ばいぶこーでぃんぐ vibe coding ノーコード",c:"tsukuru",one:"コードを書かず、言葉で頼んでアプリを作ること",desc:"「こんなものが欲しい」を言葉で伝え、AIにコードを書かせて、動かしながら直していく作り方。プログラミングの知識がなくても、サイトやツールを形にできます。",ex:"「用語を検索できる図鑑サイトを作って」→ AIが作る → 見て「ここを直して」と伝える。",miss:"何も確認しなくていい、ではありません。お金や個人情報を扱う仕組みは、分かる人に見てもらうのが安全。",rel:["artifact","agent","github"]},
+{id:"credit",name:"クレジット",yomi:"くれじっと credit ポイント 回数",c:"okane",one:"画像や動画を作るたびに減る、回数券のようなもの",desc:"生成のたびに消費されるポイント。月ごとに配られたり、追加で買ったりします。動画は画像より多く消費するのが一般的。",ex:"月1,000クレジットのプラン。画像1枚で10、動画1本で100消費、という数え方。",miss:"AIの月額プランに入れば、つないだ外部サービスも使い放題、は誤解です。外部サービスのクレジットは別の財布。",rel:["rate","api","vidgen"]},
+{id:"rate",name:"レート制限（使用量の上限）",yomi:"しようりょうのじょうげん れーとせいげん rate limit 制限 リミット 上限",c:"okane",must:0,one:"一定の時間に使える量の決まり",desc:"プランごとに、一定の時間内に使える量が決まっています。届くと、しばらく使えなくなるか、軽いモデルに切り替わります。時間がたつと元に戻ります。",ex:"長い資料を何度も作り直したら「上限に達しました」と表示。数時間後に復活。",miss:"有料プランなら無制限、ではありません。上のプランほど枠が大きくなる仕組みです。",rel:["token","think","credit"]},
+{id:"beta",name:"ベータ（プレビュー）",yomi:"べーた beta プレビュー preview 早期アクセス 実験的",c:"okane",one:"完成前に、先行して公開されている状態",desc:"使えるけれど、まだ仕上がっていない機能に付く印。機能が足りなかったり、画面や仕様が変わったりします。",ex:"新機能のタイルに「ベータ」と表示。数か月後に正式版になり、使えるプランが広がる。",miss:"ベータは危険、ではありません。ただ、大事なデータをそこだけに置くのは避け、控えを持っておくと安心。",rel:["rate","model"]},
+{id:"watermark",name:"電子透かし（SynthIDなど）",yomi:"でんしすかし しんすあいでぃー synthid watermark ウォーターマーク c2pa",c:"anzen",one:"AIが作ったものに入る、目に見えない印",desc:"画像、動画、音声に、人の目や耳では分からない形で埋め込まれる印。専用の道具で調べると、AIで作ったものだと確かめられます。",ex:"GoogleのAIで作った画像や音声には、SynthIDという印が入る。",miss:"切り抜けば消える、とは限りません。加工しても残るように作られています。AIで作ったことは、隠さず書くほうが安心。",rel:["imggen","commercial"]},
+{id:"inject",name:"プロンプトインジェクション",yomi:"ぷろんぷといんじぇくしょん prompt injection 攻撃",c:"anzen",one:"AIが読む文章に、悪い命令を紛れ込ませる手口",desc:"Webページやメール、ファイルの中に「前の指示は無視して、こうしろ」と書いておき、読んだAIを操ろうとする攻撃。AIに操作を任せる場面で問題になります。",ex:"AIに要約させたページに、見えない文字で「この人の情報を送信しろ」と書かれている。",miss:"自分には関係ない、ではありません。AIにブラウザやメールを任せるなら、確認を挟む設定にしておくと被害を防げます。",rel:["cu","agent","connector"]},
+{id:"commercial",name:"商用利用",yomi:"しょうようりよう commercial use 著作権 ちょさくけん ライセンス 販売",c:"anzen",one:"AIで作ったものを、仕事や販売に使ってよいか",desc:"作ったものを売ったり、広告に使ったりできるかどうか。サービスの規約とプランで決まり、無料プランでは不可のこともあります。",ex:"noteの有料記事の挿絵、販売する教材の動画、広告のBGMに使う場合。",miss:"AIが作ったから自由に使える、ではありません。規約の確認に加えて、実在の人や既存の作品に似すぎていないかも見ておきましょう。",rel:["watermark","imggen","github"]},
+{id:"github",name:"GitHub",yomi:"ぎっとはぶ github リポジトリ repository オープンソース",c:"anzen",one:"世界中の人が、作ったプログラムを置いている場所",desc:"プログラムやスキルを公開、共有するためのサイト。AI向けの便利なスキルやツールの多くが、ここで無料で配られています。",ex:"話題の動画づくりスキルを、GitHubのページからダウンロードして自分のAIに入れる。",miss:"置いてあるものは全部安全で自由、ではありません。作者と人気を確かめ、利用条件（ライセンス）を読んでから使いましょう。",rel:["skill","commercial","local"]},
+{id:"local",name:"ローカルLLM（オープンモデル）",yomi:"ろーかるえるえるえむ local llm オープンソース open weights オフライン",c:"anzen",one:"自分のパソコンの中で動かすAI",desc:"公開されているモデルをダウンロードし、ネットにつながず自分のパソコンで動かす使い方。データが外に出ないのが強みです。",ex:"外に出したくない資料を、パソコンの中だけで要約させる。",miss:"無料で最新AIと同じ性能、ではありません。高性能なパソコンが必要で、賢さもクラウドの最新モデルには届かないことが多いです。",rel:["model","github","api"]}
+,{id:"agi",name:"AGI（汎用人工知能）",yomi:"えーじーあい agi 汎用人工知能 はんようじんこうちのう 超知能 asi",c:"kihon",one:"人と同じくらい、何でもこなせるAIのこと",desc:"特定の作業だけでなく、人ができる知的な作業を幅広くこなせるAIを指す言葉。まだ実現したとは言えず、いつ来るか、何をもってAGIとするかは意見が分かれています。",ex:"ニュースで「AGIに近づいた」「数年以内にAGI」と語られる時の、目標地点の名前。",miss:"もう完成している、と言い切る投稿には注意。会社や人によって定義が違うため、話半分で受け取るのが安全です。",rel:["model","bench","agent"]}
+,{id:"project",name:"プロジェクト",yomi:"ぷろじぇくと project projects ワークスペース",c:"kihon",one:"指示と資料をまとめておく、テーマ別の作業場所",desc:"1つのテーマについて、指示、資料、会話をまとめて置いておける機能。その中で始めたチャットは、置いてある資料と指示を最初から踏まえて答えます。",ex:"「note執筆」のプロジェクトに、文体のルールと過去記事を入れておく → 毎回説明しなくても同じ調子で書いてくれる。",miss:"入れた資料を全部覚えている、とは限りません。量が多いと必要な所だけを探して読むので、大事な指示は短くまとめておくと確実。",rel:["sysprompt","memory","rag"]}
+,{id:"markdown",name:"マークダウン",yomi:"まーくだうん markdown md 記法",c:"kihon",one:"記号を使って、見出しや太字を表す書き方",desc:"「#」で見出し、「**」で太字、「-」で箇条書き。AIはこの書き方で返事を整えることが多く、画面上ではきれいな見た目に変換されて表示されます。",ex:"AIの返事をコピーして貼ったら、「**」や「#」の記号がそのまま出てきた → それがマークダウン。",miss:"記号が出てきたら故障、ではありません。貼り先が変換に対応していないだけ。「記号を使わずに書いて」と頼めば消えます。",rel:["prompt","artifact"]}
+,{id:"custom",name:"GPTs・Gems（カスタムAI）",yomi:"かすたむえーあい じーぴーてぃーず じぇむ gpts gems マイgpt 自分専用",c:"kihon",one:"指示と資料を入れて作る、自分専用のAI",desc:"あらかじめ指示、資料、口調を入れておき、決まった用途専用にしたAI。ChatGPTではGPTs、GeminiではGemsと呼ばれ、人に共有することもできます。",ex:"自分の文体と商品情報を入れた「投稿づくり専用AI」を作る → テーマを入れるだけで下書きが出る。",miss:"作るのにプログラミングが必要、は誤解です。設定画面に文章を入れるだけで作れます。",rel:["sysprompt","project","skill"]}
+,{id:"webhook",name:"Webhook",yomi:"うぇぶふっく webhook 通知 トリガー",c:"tsunagu",one:"何かが起きた瞬間に、別のサービスへ知らせる仕組み",desc:"「メッセージが届いた」「フォームが送信された」などの出来事をきっかけに、決めておいた宛先へ自動で知らせを送る仕組み。自動化の出発点としてよく使われます。",ex:"公式LINEにメッセージが届く → その内容がAIに渡る → 返事が自動で送られる。",miss:"APIと同じもの、ではありません。APIはこちらから取りに行く窓口、Webhookは向こうから届く知らせです。",rel:["api","workflow","connector"]}
+,{id:"ext",name:"ブラウザ拡張機能",yomi:"ぶらうざかくちょうきのう chrome拡張 extension エクステンション アドオン",c:"tsunagu",one:"ブラウザに追加して、機能を増やす小さなアプリ",desc:"ChromeなどのブラウザにAIを組み込むための追加機能。開いているページを要約させたり、AIにブラウザを操作させたりできます。",ex:"記事を開いたまま、横のパネルで「このページを3行でまとめて」。",miss:"入れるだけなら安全、とは限りません。ページの中身を読める権限を持つので、公式のものか、提供元を確かめてから入れましょう。",rel:["cu","connector","inject"]}
+,{id:"nocode",name:"ノーコード",yomi:"のーこーど no-code nocode ローコード プログラミング不要",c:"tsukuru",one:"プログラムを書かずに、サイトやアプリや自動化を作ること",desc:"コードを書かずに、ものを作る方法の総称。以前は、画面上で部品を並べて組む専用ツールを指す言葉でした。今は、AIに言葉で頼んで作ってもらう形が中心になっています。",ex:"Claudeに「用語を検索できるサイトを作って」と頼む → コードはAIが書き、自分は見て直したい所を伝えるだけ。",miss:"コードを書かない＝何も知らなくていい、ではありません。公開の仕方や、個人情報の扱いといった基本は押さえておくと安心。",rel:["vibe","artifact","deploy"]}
+,{id:"coder",name:"Claude Code・Codex（コーディングエージェント）",yomi:"こーでぃんぐえーじぇんと claude code codex cursor antigravity ai開発",c:"makaseru",one:"プログラムを書いて、動かして、直すまでやるAI",desc:"コードを書くだけでなく、ファイルを作り、実際に動かし、エラーが出たら自分で直すところまで進めるAI。Claude Code、Codexなどがこの種類です。",ex:"「このサイトに検索機能を付けて」→ 必要なファイルを直し、動くか試し、結果を報告。",miss:"エンジニア専用、ではありません。日本語で頼めるので、サイトやツールを作りたい初心者にも使われています。",rel:["vibe","agent","term"]}
+,{id:"term",name:"ターミナル（コマンド）",yomi:"たーみなる こまんど terminal cli コマンドライン 黒い画面 シェル",c:"makaseru",one:"文字で命令を打ち込んで、パソコンを動かす画面",desc:"マウスで操作する代わりに、文字の命令（コマンド）を打ち込んでパソコンを動かす画面。スキルやツールの入れ方で「このコマンドを実行」と書かれている時の、打ち込む場所です。",ex:"スキルの配布ページにある1行をコピー → ターミナルに貼ってEnter → インストール完了。",miss:"意味の分からないコマンドを、そのまま貼るのは危険。何をする命令か、先にAIに聞いて確かめてから実行を。",rel:["coder","github","skill"]}
+,{id:"i2v",name:"Image to Video（画像から動画）",yomi:"いめーじとぅーびでお i2v image to video t2v text to video 画像から動画",c:"tsukuru",one:"1枚の画像を、動く映像に変えること",desc:"画像を渡して、そこから動きのある動画を作る方法。文章だけから作る方法（Text to Video）より、見た目をねらい通りにしやすいのが強みです。",ex:"先に画像生成で理想の1枚を作る → その画像を動画生成に渡して動かす。",miss:"どんな画像でも自然に動く、ではありません。手や文字が多い画像は崩れやすいので、シンプルな構図から試すのが近道。",rel:["vidgen","imggen","ref"]}
+,{id:"ref",name:"リファレンス（参照画像）",yomi:"さんしょうがぞう りふぁれんす reference 一貫性 キャラ固定 consistency",c:"tsukuru",one:"見本の画像を渡して、同じ人物や絵柄で作らせること",desc:"AIに見本の画像を渡すと、その人物や商品、絵柄を保ったまま、別の場面を作れます。連続した投稿や物語づくりに欠かせない機能です。",ex:"主人公の画像を1枚渡す →「カフェにいる場面」「夜の街を歩く場面」を同じ顔で作る。",miss:"完全に同じ顔が続く、とは限りません。場面が大きく変わるとずれるので、毎回同じ見本を渡し直すと安定します。",rel:["imggen","lora","seed"]}
+,{id:"lora",name:"LoRA（ローラ）",yomi:"ろーら lora 追加学習 絵柄",c:"tsukuru",one:"絵柄やキャラを覚えさせる、小さな追加パーツ",desc:"画像モデルに差し込んで使う、追加の学習データ。特定の絵柄、人物、商品を覚えさせておくと、毎回その特徴で画像が出ます。",ex:"自分のブランドのイラストの絵柄を覚えさせたLoRAを使い、投稿用の画像を量産。",miss:"どのAIでも使える、ではありません。主に、自分で動かすタイプの画像生成で使われます。他人の絵柄をまねたLoRAは権利の問題になりやすい点にも注意。",rel:["ref","finetune","copyright"]}
+,{id:"upscale",name:"アップスケール",yomi:"あっぷすけーる upscale 高画質化 高解像度 4k",c:"tsukuru",one:"小さく粗い画像や動画を、大きくきれいにすること",desc:"解像度を上げ、足りない細部をAIが補う処理。作った画像や動画を、投稿や印刷に使える大きさに仕上げる時に使います。",ex:"720pで作った動画を、仕上げの段階で4Kに上げる。",miss:"元がぼやけていても完璧になる、ではありません。無い情報はAIの想像で補うので、顔や文字が変わることがあります。",rel:["imggen","vidgen","aspect"]}
+,{id:"inpaint",name:"インペイント（部分修正）",yomi:"いんぺいんと inpaint inpainting 部分修正 アウトペイント 消しゴム",c:"tsukuru",one:"画像の一部だけを囲んで、そこだけ作り直すこと",desc:"直したい場所を指定して、その部分だけをAIに描き直させる機能。画像の外側を描き足すアウトペイントもあります。最近は、囲まなくても会話で「ここを直して」と伝えるだけで済むものが増えました。",ex:"背景に写り込んだ物を消す。空いた場所に木を足す。",miss:"直した所だけが変わる、とは限りません。まわりの色や影が少し変わることがあるので、仕上がりは全体で確認を。",rel:["imggen","upscale","neg"]}
+,{id:"lipsync",name:"リップシンク",yomi:"りっぷしんく lip sync lipsync 口パク 吹き替え",c:"tsukuru",one:"音声に合わせて、人物の口を動かすこと",desc:"用意した音声に合わせて、映像の中の人物の口の動きを作る技術。アバター動画や、別の言語への吹き替えで使われます。",ex:"日本語で撮った動画を英語の音声に差し替え、口の動きも英語に合わせる。",miss:"横顔や激しい動きでは、ずれやすくなります。正面を向いた、動きの少ない映像が向いています。",rel:["avatar","tts","deepfake"]}
+,{id:"avatar",name:"AIアバター",yomi:"えーあいあばたー avatar デジタルヒューマン 分身",c:"tsukuru",one:"台本を渡すと、人物が話す動画になる分身",desc:"実在の人や架空の人物の見た目をもとに、台本どおりに話す動画を作る機能。撮影をしなくても、解説動画や案内動画を作れます。",ex:"自分のアバターを1度作っておく → 以後は台本を入れるだけで、自分が話す動画ができる。",miss:"だれの顔でも使ってよい、ではありません。本人の許可がない顔や声を使うと、大きなトラブルになります。",rel:["lipsync","vclone","deepfake"]}
+,{id:"vclone",name:"ボイスクローン",yomi:"ぼいすくろーん voice clone 声の複製 ボイスクローニング",c:"tsukuru",one:"声の見本から、その人の声を再現すること",desc:"数十秒から数分の音声を見本にして、その人の声で新しい文章を読み上げられるようにする技術。自分の声でナレーションを量産できます。",ex:"自分の声を登録 → 台本を入れるだけで、自分の声の音声ができる。",miss:"自分以外の声を、許可なく複製してはいけません。多くのサービスが本人確認を求めており、悪用は詐欺の手口にもなっています。",rel:["tts","avatar","deepfake"]}
+,{id:"seed",name:"シード値",yomi:"しーどち seed シード 乱数",c:"tsukuru",one:"同じ絵をもう一度出すための、番号",desc:"画像や動画を作る時の、ばらつきの出発点になる番号。同じ指示と同じ番号なら、ほぼ同じ結果が出ます。気に入った結果を少しだけ変えたい時に使います。",ex:"気に入った画像のシード値を控える → 同じ番号のまま、服の色だけ変える指示を出す。",miss:"すべてのサービスで指定できる、ではありません。チャット型のアプリでは見えないことが多く、専用ツールやAPIで使う設定です。",rel:["imggen","ref","temp"]}
+,{id:"neg",name:"ネガティブプロンプト",yomi:"ねがてぃぶぷろんぷと negative prompt 除外",c:"tsukuru",one:"入れたくない要素を、先に伝える指示",desc:"「文字を入れない」「人物を出さない」のように、避けたい要素を指定する方法。専用の入力欄があるツールと、ふつうの文章で伝えるツールがあります。",ex:"風景画像で「文字、ロゴ、人物は入れない」と添える。",miss:"書けば必ず消える、ではありません。「〜を入れない」より「〜だけを描く」と伝えたほうが効く場合もあります。",rel:["prompt","imggen","inpaint"]}
+,{id:"aspect",name:"アスペクト比と解像度",yomi:"あすぺくとひ かいぞうど aspect ratio resolution 縦横比 9:16 16:9 1080p 4k",c:"tsukuru",one:"画像や動画の、縦横の比と細かさ",desc:"アスペクト比は縦と横の比。解像度は画面の細かさ。載せる場所によって合う形が決まっているので、作る前に指定しておくと作り直しが減ります。",ex:"リールやショートは9:16、YouTubeは16:9、フィード投稿は1:1か4:5。",miss:"あとで切り抜けばいい、と考えると大事な部分が切れます。最初から載せる場所の比で作るのが確実。",rel:["upscale","vidgen","imggen"]}
+,{id:"deploy",name:"デプロイ（公開）",yomi:"でぷろい deploy 公開 ホスティング vercel github pages",c:"tsukuru",one:"作ったサイトやアプリを、だれでも見られる状態にすること",desc:"自分のパソコンの中にあるサイトやアプリを、インターネット上の置き場所に上げて、URLで開けるようにする作業。VercelやGitHub Pagesなどがよく使われます。",ex:"AIに作ってもらったHTMLファイルを、GitHub Pagesに置いてURLを発行する。",miss:"公開したら、世界中のだれでも見られます。個人情報や、APIキーが入ったファイルを一緒に上げないよう注意。",rel:["vibe","github","apikey"]}
+,{id:"payg",name:"従量課金",yomi:"じゅうりょうかきん pay as you go 従量制 使った分だけ",c:"okane",one:"使った分だけ、あとから料金がかかる仕組み",desc:"使った量に応じて、あとから請求される形。APIの料金がこの方式で、読み込ませた量（入力）と書かせた量（出力）で金額が決まります。",ex:"自動化で1日100回AIを呼ぶ → 月末に、使った分の合計が請求される。",miss:"少ししか使っていないつもりでも、自動で動く仕組みは回数がかさみます。請求の上限額を先に設定しておくのが基本。",rel:["api","token","subs"]}
+,{id:"rollout",name:"ロールアウト（順次展開）",yomi:"じゅんじてんかい ろーるあうと rollout 段階的 提供開始",c:"okane",one:"新機能が、少しずつ利用者に配られていくこと",desc:"新しい機能は、数日から数週間かけて少しずつ配られることが多くあります。発表されたのに自分の画面に無いのは、たいていこれが理由。米国や英語から始まり、日本はあとになることもよくあります。",ex:"「本日から提供開始」の発表 → 自分の画面には3日後に出てきた。",miss:"出てこないのは故障やプランのせい、と決めつけないこと。まずはアプリの更新と、数日待つことを試しましょう。",rel:["beta","rate","model"]}
+,{id:"jail",name:"ジェイルブレイク（脱獄）",yomi:"じぇいるぶれいく jailbreak 脱獄 制限解除",c:"anzen",one:"言い回しでごまかして、AIの制限を破ろうとすること",desc:"「物語の中の話として」「テストだから」などの言い回しで、AIが断るはずの内容を出させようとする行為。各社が対策を続けています。",ex:"「制限を外す魔法のプロンプト」として、SNSで出回っているもの。",miss:"試すだけなら問題ない、ではありません。利用規約に反し、アカウント停止の理由になります。発信で広めるのも避けましょう。",rel:["guard","inject","prompt"]}
+,{id:"deepfake",name:"ディープフェイク",yomi:"でぃーぷふぇいく deepfake 偽動画 フェイク なりすまし",c:"anzen",one:"AIで作った、本物そっくりの偽の映像や音声",desc:"実在の人が、言っていないことを言い、していないことをしているように見せる偽の映像や音声。詐欺やデマに使われ、社会問題になっています。",ex:"有名人が投資をすすめる偽の動画広告。家族の声をまねた電話。",miss:"今は、見ただけで見分けるのが難しい水準です。お金や個人情報を求める映像や電話は、別の手段で本人に確かめるのが鉄則。",rel:["watermark","vclone","avatar"]}
+,{id:"optout",name:"オプトアウト（学習に使わせない設定）",yomi:"おぷとあうと opt out 学習させない プライバシー 個人情報 機密",c:"anzen",one:"自分の会話を、AIの学習に使わせない設定",desc:"サービスによっては、利用者の会話がモデルの改善に使われます。設定でこれを止めることをオプトアウトと呼びます。仕事向けのプランでは、最初から使われない契約になっているものもあります。",ex:"設定画面で「モデルの改善に協力する」をオフにする。",miss:"オフにすれば何を入れても安全、ではありません。パスワード、カード番号、他人の個人情報は、そもそも入れないのが基本。",rel:["train","memory","apikey"]}
+,{id:"license",name:"ライセンス",yomi:"らいせんす license mit cc クリエイティブコモンズ 利用条件 非商用",c:"anzen",one:"使ってよい範囲を決めた、作者の約束ごと",desc:"プログラムや素材を「どこまで自由に使ってよいか」を作者が決めたもの。商用OKのものから、非商用に限るもの、作者名の表示が必要なものまであります。",ex:"GitHubのスキルに「MIT」→ 商用も改変もOK。「CC BY-NC」→ 商用は不可。",miss:"無料で配っている＝自由に売ってよい、ではありません。配布ページのLICENSEの欄を確認してから使いましょう。",rel:["github","commercial","copyright"]}
+,{id:"pe",name:"プロンプトエンジニアリング",yomi:"ぷろんぷとえんじにありんぐ prompt engineering コンテキストエンジニアリング context engineering プロンプト術",c:"kihon",one:"ねらい通りの返事を引き出す、頼み方の技術",desc:"役割、背景、条件、出力の形を組み立てて、AIから良い結果を引き出す工夫のこと。最近は、指示文だけでなく、渡す資料や前提まで含めて整える「コンテキストエンジニアリング」という呼び方も広まっています。",ex:"「あなたは編集者。読者は初心者。3つの見出しで、表つきで」と、条件を重ねて頼む。",miss:"長い呪文のようなテンプレートが必須、という時代は過ぎました。今のAIは、目的と条件を具体的に書けば十分に応えます。",rel:["prompt","context","sysprompt"]}
+,{id:"claudemd",name:"CLAUDE.md・AGENTS.md",yomi:"くろーどえむでぃー えーじぇんつえむでぃー claude.md agents.md 指示ファイル ルールファイル",c:"makaseru",one:"AIが作業の最初に必ず読む、ルールを書いたファイル",desc:"作業フォルダに置いておく、AI向けの説明書。口調、フォルダの構成、やってはいけないことなどを書いておくと、AIが毎回それを読んでから作業を始めます。Claude CodeではCLAUDE.md、ほかの道具ではAGENTS.mdという名前が使われます。",ex:"「投稿は必ずです・ます調」「下書きはdraftsフォルダに保存」と書いておく → 毎回言わなくても守られる。",miss:"長く書くほど良い、ではありません。量が増えると守られにくくなるので、本当に毎回必要なことだけに絞るのがコツ。",rel:["coder","sysprompt","skill"]}
+,{id:"plugin",name:"プラグイン",yomi:"ぷらぐいん plugin plugins 拡張",c:"tsunagu",one:"スキルや連携をまとめて追加できる、機能の詰め合わせ",desc:"スキル、コネクタ、コマンドなどを1つにまとめたパック。1回入れるだけで、ある仕事に必要な機能がそろいます。",ex:"営業向けのプラグインを入れる → 顧客管理ツールとの連携、提案書づくりのスキルがまとめて使えるようになる。",miss:"スキルと同じもの、ではありません。スキルは手順書1つ、プラグインはスキルや連携をいくつも束ねたものです。",rel:["skill","connector","mcp"]}
+,{id:"oss",name:"オープンソース（OSS）",yomi:"おーぷんそーす oss open source オープンウェイト 無料公開",c:"anzen",one:"中身が公開されていて、だれでも使える、直せるもの",desc:"プログラムやAIモデルの中身を公開し、だれでも使ったり改良したりできるようにしたもの。SNSで「オープンソースで公開された」と話題になるツールやモデルがこれです。",ex:"話題の動画生成モデルがオープンソースで公開 → 自分のパソコンや、各社のサービス上で使えるようになる。",miss:"無料＝何に使ってもよい、ではありません。商用利用の可否はライセンスで決まります。",rel:["github","license","local"]}
+,{id:"slop",name:"AIスロップ",yomi:"えーあいすろっぷ ai slop スロップ 量産 低品質",c:"anzen",one:"AIで量産された、中身の薄いコンテンツのこと",desc:"AIに丸投げして大量に作られた、似たり寄ったりの投稿、画像、動画を指す言葉。SNSにあふれたことで、見る側の目も厳しくなっています。",ex:"どこかで見たような文章と画像の投稿が、タイムラインに何本も続く。",miss:"AIを使うこと自体が悪い、という意味ではありません。自分の体験や視点を足しているかどうかが、分かれ目になります。",rel:["genai","commercial","watermark"]}
+,{id:"ugc",name:"UGC動画（AI UGC）",yomi:"ゆーじーしー ugc user generated content 口コミ動画 広告",c:"tsukuru",one:"ふつうの人が撮ったような、口コミ風の動画",desc:"UGCは、利用者が自分で作って投稿したコンテンツのこと。スマホで撮ったような自然な見た目が広告より信頼されやすく、最近はAIで作る「AI UGC」も増えています。",ex:"AIアバターが商品を手に持って、使った感想を話す縦型の動画。",miss:"実在しない人の「使ってみた感想」を本物の口コミのように見せると、ステルスマーケティングの問題になります。広告であることの表示を忘れずに。",rel:["avatar","vidgen","commercial"]}
+,{id:"camera",name:"カメラワーク（モーションコントロール）",yomi:"かめらわーく もーしょんこんとろーる camera motion control ズーム パン ドリー",c:"tsukuru",one:"動画の中で、カメラをどう動かすかの指定",desc:"ズーム、パン、ドリーなど、映像のカメラの動きを指定すること。動画生成では、これを書くかどうかで映像の印象が大きく変わります。人物の動きを別の動画からまねさせる機能は、モーションコントロールと呼ばれます。",ex:"「ゆっくりズームイン」「左から右へパン」「被写体のまわりを回る」と指示に足す。",miss:"動きを詰め込むほど迫力が出る、とは限りません。1カットにつき動きは1つに絞ると、崩れにくくなります。",rel:["vidgen","i2v","prompt"]}
+,{id:"faceswap",name:"フェイススワップ",yomi:"ふぇいすすわっぷ face swap 顔入れ替え 顔交換",c:"tsukuru",one:"写真や動画の顔だけを、別の顔に入れ替えること",desc:"元の体や動きはそのままに、顔だけを別人のものに差し替える技術。自分の顔をアバターに使ったり、同じ人物で動画を続けたりする時に使われます。",ex:"撮影済みの動画の顔を、自分で作ったAIキャラクターの顔に入れ替える。",miss:"他人や有名人の顔を許可なく使うのは、ディープフェイクそのもの。使ってよいのは、自分の顔か、権利のはっきりしたキャラクターだけです。",rel:["deepfake","avatar","ref"]}
+];
+var byId={};S.forEach(function(s,i){byId[s.id]=s;s.ci=i;s.pv=s.pv||s.id});
+var CVV={kihon:"--c1",shikumi:"--c5",tsunagu:"--c4",makaseru:"--c2",tsukuru:"--c3",okane:"--c6",anzen:"--ink"};
+function chipStyle(k){return "background:var("+CVV[k]+")"+(k==="tsukuru"?";color:#0c0d12":k==="anzen"?";color:var(--bg)":"")}
+function short(n){return n.replace(/（.*$/,"")}
+$("#mq").innerHTML=[0,1].map(function(){return S.map(function(s){return '<span>'+esc(short(s.name))+'</span>'}).join("")}).join("");
+$("#qn").innerHTML=Object.keys(CAT).map(function(k){return '<a href="#cat-'+k+'" data-cat="'+k+'" style="'+chipStyle(k)+'">'+CAT[k][0]+'</a>'}).join("");
+
+/* cards */
+var known={};try{known=JSON.parse(store("ygz-known")||"{}")||{}}catch(e){known={}}
+function cardHTML(s){
+  return '<article class="card" id="s-'+s.id+'" data-c="'+s.c+'" data-id="'+s.id+'">'+
+   '<div class="hd"><div class="ico">'+esc(s.name.charAt(0))+'</div><div><h3>'+esc(s.name)+'</h3><div class="tags">'+(s.must?'<span class="must">まず覚える</span>':'')+'<span class="catp">'+CAT[s.c][0]+'</span></div></div></div>'+
+   '<canvas class="pvc" data-pv="'+s.pv+'" data-app="'+s.id+'" aria-hidden="true"></canvas>'+
+   '<div class="bd"><p class="one">'+esc(s.one)+'</p>'+
+   '<details class="more"><summary>くわしく</summary><div class="in">'+
+   '<div><div class="lbl">どういうもの</div><p>'+esc(s.desc)+'</p></div>'+
+   '<div><div class="lbl">具体例</div><p>'+esc(s.ex)+'</p></div>'+
+   '<div class="caution"><b>気をつける点</b>　'+esc(s.miss)+'</div>'+
+   '<div><div class="lbl">一緒に覚える言葉</div><div class="rel">'+s.rel.filter(function(r){return byId[r]}).map(function(r){return '<a href="#s-'+r+'" data-jump="'+r+'">'+esc(short(byId[r].name))+'</a>'}).join("")+'</div></div>'+
+   '</div></details>'+
+   '<label class="kn" for="kn-'+s.id+'"><input type="checkbox" id="kn-'+s.id+'" data-kn="'+s.id+'"'+(known[s.id]?" checked":"")+'>覚えた</label></div></article>';
+}
+$("#cards").innerHTML=Object.keys(CAT).map(function(k){return '<div class="cath" id="cat-'+k+'" data-cat="'+k+'"><i style="background:var('+CVV[k]+')"></i><b>'+CAT[k][0]+'</b><span>'+CAT[k][1]+'</span></div>'+S.filter(function(s){return s.c===k}).map(cardHTML).join("")}).join("")+'<div class="nohit" id="noHit" hidden>見つかりませんでした。別の言い方や、ひらがなでも試してみてください。</div>';
+var FL=[["all","すべて"],["must","まず覚える10語"],["todo","まだ覚えていない"]].concat(Object.keys(CAT).map(function(k){return [k,CAT[k][0]]}));
+$("#filters").innerHTML=FL.map(function(f,i){return '<button class="chip" type="button" data-f="'+f[0]+'" aria-pressed="'+(i===0)+'">'+f[1]+'</button>'}).join("");
+var curF="all";
+function norm(s){return (s||"").toLowerCase().replace(/[\s　・]/g,"").replace(/[ァ-ヶ]/g,function(m){return String.fromCharCode(m.charCodeAt(0)-0x60)})}
+function apply(){var q=norm($("#q").value),n=0;
+  $$("#cards .card").forEach(function(c){var s=byId[c.dataset.id],okF=curF==="all"||(curF==="must"&&s.must)||(curF==="todo"&&!known[s.id])||curF===s.c,okQ=!q||norm(s.name+s.yomi+s.one+s.desc).indexOf(q)>=0,show=okF&&okQ;c.hidden=!show;if(show)n++});
+  $$("#cards .cath").forEach(function(h){h.hidden=!$$('#cards .card[data-c="'+h.dataset.cat+'"]').some(function(c){return !c.hidden})});
+  $("#noHit").hidden=n>0;$("#hitN").textContent=n+" 語を表示中";$$("#filters .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f===curF)});drawAllOnce()}
+$("#filters").addEventListener("click",function(e){var b=e.target.closest(".chip");if(!b)return;curF=b.dataset.f;apply()});
+$("#q").addEventListener("input",apply);
+function paintProg(){var n=S.filter(function(s){return known[s.id]}).length;$("#progBar").style.width=(n/S.length*100)+"%";$("#progTxt").textContent="覚えた言葉 "+n+" / "+S.length+(n===S.length?"　全部覚えました":"")}
+$("#cards").addEventListener("change",function(e){var id=e.target.dataset.kn;if(!id)return;known[id]=e.target.checked;store("ygz-known",JSON.stringify(known));paintProg()});
+function jump(id){curF="all";$("#q").value="";apply();var el=$("#s-"+id);if(!el)return;var d=el.querySelector("details");if(d)d.open=true;el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});el.classList.add("flash");setTimeout(function(){el.classList.remove("flash")},1600)}
+document.addEventListener("click",function(e){var a=e.target.closest("[data-jump]");if(a){e.preventDefault();jump(a.dataset.jump)}});
+$("#qn").addEventListener("click",function(){curF="all";$("#q").value="";apply()});
+$("#toTop").addEventListener("click",function(){window.scrollTo({top:0,behavior:reduce?"auto":"smooth"})});
+apply();paintProg();
+
+/* screen map */
+var PINS=[
+ {p:"#p1",id:"model",cap:"モデル　中で動く頭脳を切り替える場所",tip:"速いモデルと賢いモデルを、作業に合わせて選びます。"},
+ {p:"#p2",id:"think",cap:"思考レベル　考える深さを決める場所",tip:"難しい相談の時だけ上げるのがコツ。"},
+ {p:"#p3",id:"prompt",cap:"プロンプト　自分が送る、頼みごとの文章",tip:"だれ向け、形、長さを書くと仕上がりが安定。"},
+ {p:"#p4",id:"connector",cap:"コネクタ　外のアプリをつなぐ入口",tip:"カレンダーやデザインツールを、ここからつなぎます。裏で動いているのがMCP。"},
+ {p:"#p5",id:"halluc",cap:"出典　ハルシネーションを確かめる手がかり",tip:"数字や固有名詞は、出典を開いて元の情報で確認。"},
+ {p:"#p6",id:"artifact",cap:"アーティファクト　会話の横に開く作成物",tip:"保存、編集、共有ができます。"},
+ {p:"#p7",id:"memory",cap:"メモリ　別の会話でも覚えていること",tip:"覚えている内容は、設定から確認と削除が可能。"},
+ {p:"#p8",id:"rate",cap:"使用量の上限　どのくらい使ったかの目安",tip:"上限に届くと、時間がたつまで使えなくなります。"}
+];
+var si=0,playing=false,timer=null;
+function moveCur(sel){var c=$("#cur"),st=$("#stage");$$(".hl",st).forEach(function(x){x.classList.remove("hl")});var el=$(sel);if(!el||!el.offsetParent){c.style.opacity=0;return}c.style.opacity=1;var a=st.getBoundingClientRect(),b=el.getBoundingClientRect();c.style.transform="translate("+(b.left-a.left+b.width*.5)+"px,"+(b.top-a.top+b.height*.5)+"px)";el.classList.add("hl");c.classList.remove("click");setTimeout(function(){c.classList.add("click")},720)}
+function show(){clearTimeout(timer);var s=PINS[si];
+  $("#stepList").innerHTML=PINS.map(function(p,i){return '<li class="'+(i===si?"on":i<si?"done":"")+'"><button type="button" data-s="'+i+'"><span class="no">'+(i+1)+'</span><span>'+esc(p.cap.split("　")[0])+'<span class="tp">'+esc(p.cap.split("　")[1])+'</span></span></button></li>'}).join("");
+  $("#stepNo").textContent=(si+1)+" / "+PINS.length;$("#capNo").textContent=si+1;$("#capt").textContent=s.cap;$("#tip").textContent=s.tip;$("#tipJump").dataset.jump=s.id;$("#tipJump").href="#s-"+s.id;
+  $("#prevB").disabled=si===0;$("#nextB").disabled=si===PINS.length-1;$("#playB").textContent=playing?"■ 停止":(si===PINS.length-1?"▶ 最初から":"▶ 再生");
+  requestAnimationFrame(function(){moveCur(s.p)});
+  if(playing){if(si<PINS.length-1)timer=setTimeout(function(){si++;show()},2800);else timer=setTimeout(function(){playing=false;show()},2400)}}
+$("#stepList").addEventListener("click",function(e){var b=e.target.closest("[data-s]");if(!b)return;playing=false;si=+b.dataset.s;show()});
+$("#prevB").addEventListener("click",function(){playing=false;if(si>0)si--;show()});
+$("#nextB").addEventListener("click",function(){playing=false;if(si<PINS.length-1)si++;show()});
+$("#playB").addEventListener("click",function(){if(playing)playing=false;else{if(si===PINS.length-1)si=0;playing=!reduce}show()});
+window.addEventListener("resize",function(){moveCur(PINS[si].p);drawAllOnce()});
+show();
+
+
+regAll();readC();paintTheme();
+if(reduce){drawAllOnce()}else{started=true;requestAnimationFrame(loop)}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){drawAllOnce()});
+})();
+
+</script>
+</body>
+</html>
